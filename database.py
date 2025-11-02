@@ -7,8 +7,8 @@ def get_connection():
     connection = mysql.connector.connect(
       host="localhost",           # Change if running on a remote server
       user="root",                # Your MYSQL username
-      password="Yourpassword",    # Your MYSQL password
-      database="Smart_spaces"
+      password="Mnhd2025$",    # Your MYSQL password
+      database="smart_spaces"
     )
 
     if connection.is_connected():

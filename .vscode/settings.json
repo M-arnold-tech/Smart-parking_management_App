@@ -2,19 +2,19 @@
   "sqltools.connections": [
     {
       "mysqlOptions": {
-        "authProtocol": "xprotocol",
+        "authProtocol": "default",
         "enableSsl": "Disabled"
       },
       "ssh": "Disabled",
       "previewLimit": 50,
-      "server": "48440f56e5a5.d33531d3.alu-cod.online",
+      "server": "localhost",
       "port": 3306,
       "driver": "MySQL",
-      "name": "New",
+      "name": "SmartSpaces",
       "database": "Smart_spaces",
-      "username": "muvunyiduke03",
-      "password": "Duke2025",
-      "connectionTimeout": 30
+      "username": "root",
+      "password": "Mnhd2025$",
+      "connectionTimeout": 50
     }
   ]
 }

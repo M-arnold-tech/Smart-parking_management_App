@@ -56,7 +56,7 @@ def get_available_parking_spots():
   cursor = conn.cursor(dictionary=True)
 
   cursor.execute("""
-      SELECT spot_id, location, price_per_hour, total_spots, available_spots
+      SELECT spot_id, location, price_per_hour, spot_number, is_available
       FROM parking_spot
       WHERE is_available = 1
       ORDER BY location ASC

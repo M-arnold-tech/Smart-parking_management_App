@@ -1,7 +1,7 @@
 -- Active: 1743231903485@@f519ae958f46.601a9382.alu-cod.online@38805
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: smart_space
+-- Host: localhost    Database: smart_spaces
 -- ------------------------------------------------------
 -- Server version	8.0.34
 

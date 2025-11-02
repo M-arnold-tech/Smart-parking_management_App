@@ -84,12 +84,12 @@ def login_driver(data):
 def signup_operator(data):
     """This module will handle the signup of parking operators"""
 
-    name = data.get("name")
+    operator_name = data.get("operator_name")
     email = data.get("email")
     phone = data.get("phone_number")
     password = data.get("password")
 
-    if not all([name, email, phone, password]):
+    if not all([operator_name, email, phone, password]):
         return {"success": False, "message": "All fields are required!"}
     
     conn = get_connection()
@@ -107,9 +107,9 @@ def signup_operator(data):
     hashed_password = generate_password_hash(password)
 
     cursor.execute("""
-        INSERT INTO parking_operator (name, email, password_hash, phone_number)
+        INSERT INTO parking_operator (operator_name, email, password_hash, phone_number)
         VALUES (%s, %s, %s, %s)
-    """, (name, email, hashed_password, phone))
+    """, (operator_name, email, hashed_password, phone))
     conn.commit()
 
     cursor.close()
