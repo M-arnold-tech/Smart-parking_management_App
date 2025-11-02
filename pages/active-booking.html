@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Smart - Active Booking</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+    <div id="active-booking-page" class="page active">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-btn">Menu</button>
+                <div class="logo-small">P</div>
+                <span class="logo-text">PARK SMART</span>
+            </div>
+            <nav class="header-nav">
+                <a href="find-parking.html">Find parking space</a>
+                <a href="my-booking.html">My booking</a>
+                <a href="active-booking.html">Active booking</a>
+            </nav>
+            <div class="header-right">
+                <span class="icon">🔔</span>
+                <span class="icon">👤</span>
+                <button class="btn-signout" onclick="logout()">Sign out</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="search-bar">
+                <input type="text" placeholder="Enter your location" class="search-input">
+                <button class="btn btn-primary">Find near by</button>
+                <button class="btn-profile">Profile</button>
+            </div>
+
+            <div class="active-booking-container">
+                <div class="active-left">
+                    <div class="active-card">
+                        <h2>Your Active Booking</h2>
+                        
+                        <div class="session-info">
+                            <div class="session-item">
+                                <p class="label">Parking Session Starts</p>
+                                <p class="time">02:00 PM GMT</p>
+                            </div>
+                            <div class="session-item">
+                                <p class="label">Parking Session ending</p>
+                                <div class="countdown">00:01:12</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-success">Renew</button>
+                            <button class="btn btn-info">Arrived</button>
+                            <button class="btn btn-danger">Cancel</button>
+                        </div>
+
+                        <h3>Available spot</h3>
+                        <div class="spots-grid" id="spots-grid"></div>
+                    </div>
+                </div>
+
+                <div class="active-right">
+                    <div class="active-summary">
+                        <h3>Your Active Booking</h3>
+                        
+                        <div class="summary-item">
+                            <p class="label">Parking Session Starts</p>
+                            <p class="time">02:00 PM GMT</p>
+                        </div>
+
+                        <div class="summary-item">
+                            <p class="label">Parking Session ending</p>
+                            <div class="countdown">00:01:12</div>
+                        </div>
+
+                        <div class="summary-buttons">
+                            <button class="btn btn-success btn-full">Renew</button>
+                            <button class="btn btn-info btn-full">Arrived</button>
+                            <button class="btn btn-danger btn-full">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <a href="#">About Us</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Terms of service</a>
+            <a href="#">Work with us</a>
+        </footer>
+    </div>
+
+    <script src="../assets/script.js"></script>
+    <script>
+        loadSpots();
+    </script>
+</body>
+</html>

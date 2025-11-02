@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Smart - Find Parking</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+    <div id="find-parking-page" class="page active">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-btn">Menu</button>
+                <div class="logo-small">P</div>
+                <span class="logo-text">PARK SMART</span>
+            </div>
+            <nav class="header-nav">
+                <a href="find-parking.html">Find parking space</a>
+                <a href="my-booking.html">My booking</a>
+                <a href="active-booking.html">Active booking</a>
+            </nav>
+            <div class="header-right">
+                <span class="icon">🔔</span>
+                <span class="icon">👤</span>
+                <button class="btn-signout" onclick="logout()">Sign out</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="search-bar">
+                <input type="text" placeholder="Enter your location" class="search-input">
+                <button class="btn btn-primary">Find near by</button>
+                <button class="btn-profile">Profile</button>
+            </div>
+
+            <div class="parking-container">
+                <div class="map-section">
+                    <div class="map-placeholder">Map View</div>
+                </div>
+
+                <div class="parking-list">
+                    <h2>Available parking options</h2>
+                    <div class="parking-cards" id="parking-cards"></div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>Thank you for choosing smart space</h3>
+                <p>Find, book, and Park with absolute confidence. Our smart system lets you secure your parking space before you even leave home. With real-time availability and transparent pricing, you'll have peace of mind on every journey. Your easy park starts here!</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <a href="#">About Us</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Terms of service</a>
+            <a href="#">Work with us</a>
+        </footer>
+    </div>
+
+    <script src="../assets/script.js"></script>
+    <script>
+        loadParkingCards();
+    </script>
+</body>
+</html>

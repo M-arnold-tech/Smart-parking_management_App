@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Smart - My Booking</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+    <div id="my-booking-page" class="page active">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-btn">Menu</button>
+                <div class="logo-small">P</div>
+                <span class="logo-text">PARK SMART</span>
+            </div>
+            <nav class="header-nav">
+                <a href="find-parking.html">Find parking space</a>
+                <a href="my-booking.html">My booking</a>
+                <a href="active-booking.html">Active booking</a>
+            </nav>
+            <div class="header-right">
+                <span class="icon">🔔</span>
+                <span class="icon">👤</span>
+                <button class="btn-signout" onclick="logout()">Sign out</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="search-bar">
+                <input type="text" placeholder="Enter your location" class="search-input">
+                <button class="btn btn-primary">Find near by</button>
+                <button class="btn-profile">Profile</button>
+            </div>
+
+            <div class="booking-container">
+                <div class="booking-left">
+                    <div class="booking-card">
+                        <h2>Almost There! Secure your spot.</h2>
+                        
+                        <div class="duration-section">
+                            <p class="section-label">How long are parking?</p>
+                            <div class="duration-buttons">
+                                <button class="duration-btn" onclick="selectDuration(this, '0-1hr')">0-1hr</button>
+                                <button class="duration-btn" onclick="selectDuration(this, '1-2hr')">1-2hr</button>
+                                <button class="duration-btn active" onclick="selectDuration(this, '2-3hr')">2-3hr</button>
+                                <button class="duration-btn" onclick="selectDuration(this, '3-6hr')">3-6hr</button>
+                                <button class="duration-btn" onclick="selectDuration(this, '12hr')">12hr</button>
+                            </div>
+                        </div>
+
+                        <div class="booking-summary">
+                            <p>Estimated Cost: 200 frw per hour</p>
+                            <p>Parking for: 2-3hrs</p>
+                            <p><strong>Amount to pay: 500 frw</strong></p>
+                        </div>
+
+                        <div class="vehicle-section">
+                            <p class="section-label">Select Your Vehicle Type</p>
+                            <div class="vehicle-buttons">
+                                <button class="vehicle-btn active" onclick="selectVehicle(this, 'sedan')">
+                                    <div class="vehicle-icon">Car</div>
+                                    <span>Sedan cars</span>
+                                </button>
+                                <button class="vehicle-btn" onclick="selectVehicle(this, 'normal')">
+                                    <div class="vehicle-icon">SUV</div>
+                                    <span>Normal cars</span>
+                                </button>
+                                <button class="vehicle-btn" onclick="selectVehicle(this, 'truck')">
+                                    <div class="vehicle-icon">Truck</div>
+                                    <span>SUV & Truck</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="car-details">
+                            <div class="detail-row">
+                                <span>Car details</span>
+                                <span>Plate number</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Plate number</span>
+                                <span><strong>RAJ001T</strong></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Vehicle type</span>
+                                <span><strong>Normal</strong></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Process</span>
+                                <span><strong>No 2 color 200</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-right">
+                    <div class="payment-card">
+                        <h3>Payment details</h3>
+                        
+                        <div class="payment-details">
+                            <div class="detail-row">
+                                <span>Per-ath</span>
+                                <span><strong>MAN</strong></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Amount</span>
+                                <span><strong>500 frw</strong></span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Process</span>
+                                <span><strong>No 2 color 200</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="payment-total">
+                            <span>Total</span>
+                            <span><strong>500 frw</strong></span>
+                        </div>
+
+                        <p class="payment-method-label">Payment method</p>
+                        <button class="btn btn-payment">Visa</button>
+                        <button class="btn btn-payment">Mastercard</button>
+
+                        <button class="btn btn-primary btn-full" onclick="window.location.href='payment.html'">Pay now</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <a href="#">About Us</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Terms of service</a>
+            <a href="#">Work with us</a>
+        </footer>
+    </div>
+
+    <script src="../assets/script.js"></script>
+</body>
+</html>
