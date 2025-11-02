@@ -1,93 +1,108 @@
 # parkingSpots.py will handle all parking spots management and availability
 
-# In-memory data before db
+from database import get_connection
 
-parking_lots = []
-reservations = []
+# === ADD A PARKING LOT ===
+
 def add_parking_spot(data):
   """
   Parking operator will add a new parking location with the capacity
   """
-  spot_address = data.get("spotAddress")
-  capacity = data.get("spot_capacity", 1)
+  operator_id = data.get("operator_id")
+  location = data.get("location")
+  price_per_hour = data.get("price_per_hour")
+  total_spots = data.get("total_spots")
 
-  if not spot_address:
-    return{"success": False, "message": "Spot address is required!"}
+  # Validation
+  if not all([operator_id, location, price_per_hour, total_spots]):
+    return {"success": False, "message": "All fields are required!"}
   
-  # TODO: in real db setup, you will check:
-  # SELECT * FROM parkingSpot WHERE spotAddress = %s
-  # If it exists -> update capacity instead of duplicate insert
-
-  # TODO: If not exists, insert:
-  # INSERT INTO parkingSpot (spotAddress, spot_capacity) VALUES (%s, %s)
-
-  for lot in parking_lots:
-    if lot["address"].lower() == spot_address.lower():
-      return {"success": False, "message": "Parking lot already exists"}
+  conn = get_connection()
+  if not conn:
+    return {"success": False, "message": "Database connection failed!"}
   
-  new_lot = {
-    "spot_id": len(parking_lots) + 1,
-    "address": spot_address,
-    "spot_capacity": capacity,
-  }
-  parking_lots.append(new_lot)
-  return {"success": True, "message": f"Parking lot '{spot_address}' added successfully", "lot": new_lot}
+  cursor = conn.cursor(dictionary=True)
 
-def get_parking_spots():
-  """
-  Shows all parking locations with current availability.
-  with each including:
-    - Total capacity
-    - Number of occupied spots
-    - Number of available spots
-  """
-  lots = []
-  for lot in parking_lots:
-    # Count occupied spots
-    occupied = len([r for r in reservations if r.get("spot_id") == lot["spot_id"] and r.get("status") == "active"])
-    available = max(lot["spot_capacity"] - occupied, 0)
-    lots.append({
-      "spot_id": lot["spot_id"],
-      "address": lot["address"],
-      "spot_capacity": lot["spot_capacity"],
-      "occupied_spots": occupied,
-      "available_spots": available
-    })
-
-    return {"success": True, "parking_lots": lots}
+  # Checking for duplicates
+  cursor.execute(
+    "SELECT * FROM parking_spot WHERE operator_id=%s AND location=%s",
+    (operator_id, location)
+  )
+  if cursor.fetchone():
+    cursor.close()
+    conn.close()
+    return{"success": False, "message": "Parking lot already exists!"}
   
+  # Add parking lot
+  cursor.execute(
+    """
+    INSERT INTO parking_spot (operaotr_id, location, price_per_hour, total_spots, available_spots, is_available)
+    """,
+    (operator_id, location, price_per_hour, total_spots)
+  )
+  conn.commit()
+  cursor.close()
+  conn.close()
 
-def update_parking_spot(data):
-  """
-  The parking operator can update an existing parking location:
-  Can update the address name of the parking lot or the capacity of the parking lot.
-  """
-  spot_id = data.get("spot_id")
-  new_address = data.get("spotAddress")
-  new_capacity = data.get("spot_capacity")
+  return {"success": True, "message": f"Parking lot '{location}' added successfully!"}
 
-  if not spot_id:
-    return {"success": False, "message": "Spot ID is required"}
+# === GET ALL AVAILABLE PARKING SPOTS ===
+
+def get_available_parking_spots():
+  """Fetches all parking lots with availble parking spots."""
+  conn = get_connection()
+  if not conn:
+    return {"success": False, "message": "Database connection failed!"}
+  cursor = conn.cursor(dictionary=True)
+
+  cursor.execute("""
+      SELECT spot_id, location, price_per_hour, total_spots, available_spots
+      FROM parking_spot
+      WHERE is_available = 1
+      ORDER BY location ASC
+  """)
+  spots = cursor.fetchall()
+
+  cursor.close()
+  conn.close()
+
+  if not spots:
+    return {"success": True, "parking_spots": [], "message": "No available spots found!"}
   
-  # TODO: Example query:
-  # UPDATE parkingSpot SET spotAddress=%s, spot_capacity=%s WHERE spot_id=%s
+  return {"success": True, "parking_spots": spots}
 
-  updated_fields = []
-  if new_address:
-    updated_fields.append(f"address='{new_address}'")
-  if new_capacity:
-    updated_fields.append(f"capacity={new_capacity}")
+
+# UPDATE PARKING SPOT AVAILABILITY
+
+def update_parking_spot_availability(spot_id, available_spots):
+  """Updates the number of available spots in a parking lot"""
+
+  conn = get_connection()
+  if not conn:
+    return{"success": False, "message": "DATABASE connection failed!"}
   
-  updates = ", ".join(updated_fields) if updated_fields else "No changes"
-  return {"success": True, "message": f"Spot updated successfully: {updates}"}
+  cursor = conn.cursor(dictionary=True)
 
+  # Get total spots
+  cursor.execute("SELECT total_spots FROM parking_spot WHERE spot_id=%s", (spot_id,))
+  spot = cursor.fetchone()
 
-def delete_parking_spot(spot_id):
-  """Parking operator can delete a parking spot if necessary."""
-
-  if not spot_id:
-    return {"success": False, "message": "Spot ID required"}
+  if not spot:
+    cursor.close()
+    conn.close()
+    return {"success": False, "message": "Parking spot not found!"}
   
-  # TODO: Execute DELET FROM parkingSpot WHERE spot_id = %s
-  return {"success": True, "message": f"Parking spot with ID {spot_id} deleted successfully!"}
-  
+  total_spots = spot["total_spots"]
+  is_available = 1 if available_spots > 0 else 0
+
+  # Update spot
+  cursor.execute("""
+    UPDATE parking_spot
+    SET available_spots = %s, is_available = %s
+    WHERE spot_id = %s
+  """, (available_spots, is_available, spot_id))
+
+  conn.commit()
+  cursor.close()
+  conn.close()
+  return {"success": True, "message": "Parking availability update successfully!"}

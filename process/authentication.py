@@ -1,75 +1,149 @@
 # authentication.py will handle signup and login processes for both drivers and parking operators.
 
-# Temporary in-memory data before db setup
+from database import get_connection
+from werkzeug.security import generate_password_hash, check_password_hash
 
-drivers = []
-operators = []
+# === DRIVER SIGNUP ===
 
 def signup_driver(data):
     """Registration of a new driver."""
     username = data.get("username")
-    vehicle = data.get("vehicle")
-    phone = data.get("phoneNumber")
+    email =data.get("email")
+    vehicle_plate = data.get("vehicle_plate")
+    phone = data.get("phone_number")
+    password = data.get("password")
 
     # TODO: check if the driver already exists in the db
     # TODO: add new driver in the db if they don't exist
-    if not username or not vehicle or not phone:
+    if not all([username, email, phone, vehicle_plate, password]):
         return {"success": False, "message": "All fields are required"}
+    
+    conn = get_connection()
+    if not conn:
+        return {"success": False, "message": "Database connection failed."}
+    cursor = conn.cursor(dictionary=True)
+    
+    # Check for duplicates
+    cursor.execute("SELECT * FROM driver WHERE username=%s OR email=%s OR vehicle_plate=%s",
+                   (username, email, phone, vehicle_plate))
+    if cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return {"success": False, "message": "A driver with similar credentials already exists!"}
+    
+    # Hash the password
+    hashed_password = generate_password_hash(password)
 
-    for d in drivers:
-        if d["username"] == username:
-            return {"success": False, "message": "Driver already exists"}
+    # Add new driver
+    cursor.execute("""
+        INSERT INTO driver (username, email, password_hash, phone_number, vehicle_plate)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (username, email, hashed_password, phone, vehicle_plate))
+    conn.commit()
 
-    new_driver = {
-            "driver_id": len(drivers) + 1,
-            "username": username,
-            "vehicle": vehicle,
-            "phoneNumber": phone,
-    }
-    drivers.append(new_driver)
-    return {"success": True, "message": "Driver signup successful", "driver": new_driver}
+    cursor.close()
+    conn.close()
+    return {"success": True, "message": "Driver registered successfully!"}
 
+
+# === DRIVER LOGIN ===
+
+def login_driver(data):
+    """
+    It will work in login of drivers using the username and password.
+    """
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return {"success": False, "message": "Username and password are required!"}
+    
+    conn = get_connection()
+    if not conn:
+        return {"success": False, "message": "Database connection failed."}
+    cursor = conn.cursor(dictionary=True)
+
+    # Find driver
+    cursor.execute("SELECT * FROM driver WHERE username=%s", (username,))
+    driver = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if not driver:
+        return{"success": False, "message": "Driver not found."}
+    
+    if not check_password_hash(driver["password_hash"], password):
+        return{"success": False, "message": "Incorrect password!"}
+    
+    # Removal of sensitive info
+    driver.pop("password_hash", None)
+    return {"success":True, "message": "Login Successful!", "driver": driver}
+
+# === OPERATOR SIGNUP ===
 def signup_operator(data):
-    """Registration of a new parking operator"""
-    username = data.get("username")
-    phone = data.get("phoneNumber")
+    """This module will handle the signup of parking operators"""
 
-    # TODO: check if operator already exists in the db
-    # TODO: insert new operator in the db if they don't exist
+    name = data.get("name")
+    email = data.get("email")
+    phone = data.get("phone_number")
+    password = data.get("password")
 
-    if not username or not phone:
-        return {"success": False, "message": "All fields are required"}
+    if not all([name, email, phone, password]):
+        return {"success": False, "message": "All fields are required!"}
+    
+    conn = get_connection()
+    if not conn:
+        return{"success": False, "message": "Database connection failed."}
+    cursor = conn.cursor(dictionary=True)
 
-    for o in operators:
-        if o["username"] == username:
-            return {"success": False, "message": "Operator already exists"}
-    new_operator = {
-            "operator_id": len(operators) + 1,
-            "username": username,
-            "phoneNumber": phone,
-    }
-    operators.append(new_operator)
-    return {"success": True, "message": "Operator signup successfully", "operator": new_operator}
+    # Check if operator exists
+    cursor.execute("SELECT * FROM parking_operator WHERE email=%s OR phone_number=%s", (email, phone))
+    if cursor.fetchone():
+        cursor.close()
+        conn.close()
+        return{"success": False, "message": "Operator already exists."}
+    
+    hashed_password = generate_password_hash(password)
 
+    cursor.execute("""
+        INSERT INTO parking_operator (name, email, password_hash, phone_number)
+        VALUES (%s, %s, %s, %s)
+    """, (name, email, hashed_password, phone))
+    conn.commit()
 
-def login_user(data):
-    """Authentication of the user (driver or operator)"""
-    username = data.get("username")
-    role = data.get("role")
+    cursor.close()
+    conn.close()
+    return{"success": True, "message": "Operator registered successfully!"}
 
-    # TODO: query correct table by role
-    # TODO: verify if user exists
-    if not username or not role:
-        return {"success": False, "message": "Username and role are required!"}
+# === OPERATOR LOGIN ===
 
-    if role == "driver":
-        user = next((d for d in drivers if d["username"] == username), None)
-    elif role == "operator":
-        user = next((o for o in operators if o["username"] == username), None)
-    else:
-        return {"success": False, "message": "INvalid role"}
+def login_operator(data):
+    """ This module is for login of the parking operator using email and password"""
 
-    if user:
-        return {"success": True, "message": f"{role.capitalize()} login Successful", "user": user}
-    return {"success": False, "message": "User not found"}
+    email = data.get("email")
+    password = data.get("password")
 
+    if not email or not password:
+        return{"success": False, "message": "Email and password are required!"}
+    
+    conn = get_connection()
+    if not conn:
+        return{"success": False, "message": "Database connection failed."}
+    cursor = conn.cursor(dictionary=True)
+
+    # Find operator
+    cursor.execute("SELECT * FROM parking_operator WHERE email=%s", (email,))
+    operator = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if not operator:
+        return{"success": False, "message": "Operator not found."}
+    
+    if not check_password_hash(operator["password_hash"], password):
+        return{"success": False, "message": "Incorrect password!"}
+    
+    operator.pop("password_hash", None)
+    return{"success":True, "message": "Login Successful!", "operator": operator}
