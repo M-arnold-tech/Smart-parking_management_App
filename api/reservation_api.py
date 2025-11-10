@@ -13,6 +13,14 @@ def book_reservation():
     return jsonify({"success": False, "message": "Missing JSON Data."}), 400
   
   result = reserve_spot(data)
+
+  # Live status update
+  if result.get("success"):
+    result["status_update"] = {
+      "reservation_status": "pending",
+      "payment_status": "pending"
+    }
+
   return jsonify(result), 200 if result.get("success") else 400
 
 # ===CANCEL RESERVATION ===
@@ -22,6 +30,14 @@ def cancel_reservation_route():
   if not data:
     return jsonify({"success": False, "message": "Missing JSON Data."}), 400
   result = cancel_reservation(data)
+
+  # Live status update
+  if result.get("success"):
+    result["status_update"] = {
+      "reservation_status": "cancelled",
+      "payment_status": "refunded"
+    }
+
   return jsonify(result), 200 if result.get("success") else 400
 
 # === GET DRIVER RESERVATIONS ===
@@ -38,4 +54,12 @@ def checkout_reservation_route():
     return jsonify({"success": False, "message": "Missing JSON Data."}), 400
   
   result = reservation_checkout(data)
+
+  # Live status update
+  if result.get("success"):
+    result["status_update"] = {
+      "reservation_status": "completed",
+      "payment_status": "completed"
+    }
+
   return jsonify(result), 200 if result.get("success") else 400

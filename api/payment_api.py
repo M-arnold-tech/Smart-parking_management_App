@@ -17,6 +17,14 @@ def payment_initiation():
     return jsonify({"success": False, "message": "Missing JSON Data."}), 400
   
   result = initiate_payment(data)
+
+  # Live status update
+  if result.get("success"):
+    result["status_update"] = {
+      "payment_status": "pending",
+      "reservation_status": "pending"
+    }
+
   return jsonify(result), 200 if result.get("success") else 400
 
 
@@ -31,6 +39,20 @@ def payment_confirmation():
     return jsonify({"success": False, "message": "Missing JSON Data."})
   
   result = confirm_payment(data)
+
+  #live status update
+  if result.get("success"):
+    if "failed" in result.get("message", "").lower():
+      result["status_update"] = {
+        "payment_status": "failed",
+        "reservation_status": "pending"
+      }
+    else:
+      result["status_update"] = {
+        "payment_status": "confirmed",
+        "reservation_status": "confirmed"
+      }
+
   return jsonify(result), 200 if result.get("success") else 400
 
 
@@ -39,4 +61,12 @@ def payment_confirmation():
 def payment_status(res_id):
   """Get payment info for a specific reservation."""
   result = get_payment_status(res_id)
+
+  if result.get("success") and "payment" in result:
+    payment = result["payment"]
+    result["status_update"] = {
+      "payment_status": payment["status"],
+      "reservation_status": "confirmed" if payment["status"] == "confirmed" else "pending"
+    }
+    
   return jsonify(result), 200 if result.get("success") else 400
