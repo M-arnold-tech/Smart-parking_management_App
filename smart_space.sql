@@ -85,7 +85,7 @@ DROP TABLE IF EXISTS `parking_spot`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `parking_spot` (
   `spot_id` int NOT NULL AUTO_INCREMENT,
-  `spot_number` varchar(20) NOT NULL,
+  `spot_number` int NOT NULL,
   `operator_id` int NOT NULL,
   `location` varchar(255) NOT NULL,
   `price_per_hour` decimal(10,2) NOT NULL,
