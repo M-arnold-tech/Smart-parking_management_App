@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Smart - Find Parking</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+    <div id="find-parking-page" class="page active">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-btn">Menu</button>
+                <a href="../pages/find-parking.html" class="logo-link">
+                    <div class="logo-small">P</div>
+                    <span class="logo-text">PARK SMART</span>
+                </a>
+            </div>
+            <nav class="header-nav">
+                <a href="find-parking.html">Find parking space</a>
+                <a href="my-booking.html">My booking</a>
+                <a href="active-booking.html">Active booking</a>
+            </nav>
+            <div class="header-right">
+                <span class="icon"></span>
+                <span class="icon"></span>
+                <button class="btn-signout" onclick="logout()">Sign out</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>Find Your Perfect Parking Spot</h1>
+                    <p class="hero-subtitle">Secure, convenient, and affordable parking in your city</p>
+                    
+                    <form class="search-form">
+                        <div class="search-container">
+                            <div class="search-input-group">
+                                <span class="search-icon">📍</span>
+                                <input type="text" placeholder="Enter location, address, or landmark" class="search-input">
+                            </div>
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <span>Find Parking</span>
+                                <span class="search-arrow">→</span>
+                            </button>
+                        </div>
+                        
+                        <div class="search-filters">
+                            <div class="filter-group">
+                                <label for="date">Date</label>
+                                <input type="date" id="date" class="filter-input">
+                            </div>
+                            <div class="filter-group">
+                                <label for="time">Time</label>
+                                <input type="time" id="time" class="filter-input">
+                            </div>
+                            <div class="filter-group">
+                                <label for="duration">Duration</label>
+                                <select id="duration" class="filter-input">
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                    <option value="4">4 hours</option>
+                                    <option value="8">8+ hours</option>
+                                    <option value="24">24 hours</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-secondary">
+                                <span class="filter-icon"> </span>
+                                More Filters
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="popular-searches">
+                        <span>Popular searches:</span>
+                        <a href="#" class="tag">Airport</a>
+                        <a href="#" class="tag">Downtown</a>
+                        <a href="#" class="tag">24/7</a>
+                        <a href="#" class="tag">EV Charging</a>
+                    </div>
+                </div>
+                <div class="hero-overlay"></div>
+            </section>
+
+            <div class="parking-container">
+                <div class="map-section">
+                    <div class="map-placeholder">Map View</div>
+                </div>
+
+                <div class="parking-list">
+                    <h2>Available parking options</h2>
+                    <div class="parking-cards" id="parking-cards"></div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>Thank you for choosing smart space</h3>
+                <p>Find, book, and Park with absolute confidence. Our smart system lets you secure your parking space before you even leave home. With real-time availability and transparent pricing, you'll have peace of mind on every journey. Your easy park starts here!</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <a href="#">About Us</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Terms of service</a>
+            <a href="#">Work with us</a>
+        </footer>
+    </div>
+
+    <script src="../assets/script.js"></script>
+    <script>
+        loadParkingCards();
+    </script>
+</body>
+</html>
