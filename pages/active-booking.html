@@ -3,83 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Park Smart - Active Booking</title>
+    <title>Active Booking | Park Smart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../assets/styles.css">
+    <style>
+        /* Active Booking Page Specific Styles */
+        .active-booking-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-card h2 {
+            color: #1f2937;
+            margin-bottom: 2rem;
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+
+        .session-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .session-item {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .session-item .label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-item .time {
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .countdown {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #dc2626;
+            font-family: 'Courier New', monospace;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-action {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-renew {
+            background: #0891b2;
+            color: white;
+        }
+
+        .btn-renew:hover {
+            background: #0e7490;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.2);
+        }
+
+        .btn-arrived {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-arrived:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-cancel {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .spots-section {
+            margin-top: 2rem;
+        }
+
+        .spots-section h3 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .spots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .spot-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .spot-item:hover {
+            border-color: #0891b2;
+            background: #f0fdfa;
+        }
+
+        .spot-item.occupied {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #dc2626;
+            cursor: not-allowed;
+        }
+
+        .spot-item.selected {
+            background: #0891b2;
+            border-color: #0891b2;
+            color: white;
+        }
+
+        .spot-item.available {
+            background: #f0fdfa;
+            border-color: #0891b2;
+            color: #0e7490;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .summary-card h3 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .booking-details {
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item .label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .detail-item .value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .reference-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: #0891b2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #0e7490;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-active {
+            background: #ecfeff;
+            color: #0891b2;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-expired {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .active-booking-container {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+            }
+
+            .session-info {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="active-booking-page" class="page active">
         <header class="header">
             <div class="header-left">
-                <button class="menu-btn">Menu</button>
-                <a href="../pages/find-parking.html" class="logo-link">
-                <div class="logo-small">P</div>
-                <span class="logo-text">PARK SMART</span>
+                <button class="menu-btn" onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="find-parking.html" class="logo">
+                    <div class="logo-small">P</div>
+                    <span class="logo-text">PARK SMART</span>
+                </a>
             </div>
             <nav class="header-nav">
-                <a href="find-parking.html">Find parking space</a>
-                <a href="my-booking.html">My booking</a>
-                <a href="active-booking.html">Active booking</a>
+                <a href="find-parking.html">Find Parking</a>
+                <a href="my-booking.html">Book Now</a>
+                <a href="active-booking.html" class="active">Active Booking</a>
             </nav>
             <div class="header-right">
-                <span class="icon">🔔</span>
-                <span class="icon">👤</span>
-                <button class="btn-signout" onclick="logout()">Sign out</button>
+                <button class="icon-btn" aria-label="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="btn-signout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign out
+                </button>
             </div>
         </header>
 
         <main class="main-content">
-            <div class="search-bar">
-                <input type="text" placeholder="Enter your location" class="search-input">
-                <button class="btn btn-primary">Find near by</button>
-                <button class="btn-profile">Profile</button>
-            </div>
-
             <div class="active-booking-container">
-                <div class="active-left">
-                    <div class="active-card">
-                        <h2>Your Active Booking</h2>
-                        
-                        <div class="session-info">
-                            <div class="session-item">
-                                <p class="label">Parking Session Starts</p>
-                                <p class="time">02:00 PM GMT</p>
-                            </div>
-                            <div class="session-item">
-                                <p class="label">Parking Session ending</p>
-                                <div class="countdown">00:01:12</div>
-                            </div>
+                <div class="booking-card">
+                    <h2>Active Booking Session</h2>
+                    
+                    <div class="session-info">
+                        <div class="session-item">
+                            <div class="label">Start Time</div>
+                            <div class="time" id="startTime">10:00 AM</div>
                         </div>
-
-                        <div class="action-buttons">
-                            <button class="btn btn-success">Renew</button>
-                            <button class="btn btn-info">Arrived</button>
-                            <button class="btn btn-danger">Cancel</button>
+                        <div class="session-item">
+                            <div class="label">End Time</div>
+                            <div class="time" id="endTime">1:00 PM</div>
                         </div>
+                    </div>
 
-                        <h3>Available spot</h3>
-                        <div class="spots-grid" id="spots-grid"></div>
+                    <div class="countdown-timer">
+                        <div class="countdown" id="countdown">02:45:30</div>
+                        <div class="countdown-label">Time Remaining</div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-action btn-renew" onclick="reewBooking()">
+                            <i class="fas fa-sync"></i> Renew
+                        </button>
+                        <button class="btn-action btn-arrived" onclick="markArrived()">
+                            <i class="fas fa-check-circle"></i> Arrived
+                        </button>
+                        <button class="btn-action btn-cancel" onclick="cancelBooking()">
+                            <i class="fas fa-times-circle"></i> Cancel
+                        </button>
+                    </div>
+
+                    <div class="spots-section">
+                        <h3>Parking Spots</h3>
+                        <div class="spots-grid" id="spotsGrid">
+                            <!-- Spots will be generated by JavaScript -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="active-right">
-                    <div class="active-summary">
-                        <h3>Your Active Booking</h3>
-                        
-                        <div class="summary-item">
-                            <p class="label">Parking Session Starts</p>
-                            <p class="time">02:00 PM GMT</p>
+                <div class="summary-card">
+                    <h3>Booking Summary</h3>
+                    
+                    <div class="booking-details">
+                        <div class="detail-item">
+                            <span class="label">Status</span>
+                            <span class="status-badge status-active">Active</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="label">Location</span>
+                            <span class="value">Kigali City Center</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Spot Number</span>
+                            <span class="value" id="spotNumber">A3</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Duration</span>
+                            <span class="value">3 Hours</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Vehicle</span>
+                            <span class="value">Sedan</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Total Paid</span>
+                            <span class="value">RWF 650</span>
+                        </div>
+                    </div>
 
-                        <div class="summary-item">
-                            <p class="label">Parking Session ending</p>
-                            <div class="countdown">00:01:12</div>
+                    <div class="qr-section">
+                        <div class="qr-code">
+                            <i class="fas fa-qrcode fa-3x"></i>
                         </div>
+                        <div class="reference-number" id="referenceNumber">PK-2024-0112</div>
+                        <button class="copy-btn" onclick="copyReference()">
+                            <i class="fas fa-copy"></i> Copy Reference
+                        </button>
+                    </div>
 
-                        <div class="summary-buttons">
-                            <button class="btn btn-success btn-full">Renew</button>
-                            <button class="btn btn-info btn-full">Arrived</button>
-                            <button class="btn btn-danger btn-full">Cancel</button>
-                        </div>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-renew" onclick="reewBooking()">
+                            <i class="fas fa-sync"></i> Extend Time
+                        </button>
                     </div>
                 </div>
             </div>
@@ -94,6 +433,314 @@
     </div>
 
     <script src="../assets/script.js"></script>
+    <script>
+        // Active Booking Page JavaScript
+        let countdownInterval;
+        let selectedSpot = 'A3';
+        let bookingEndTime;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeActiveBooking();
+        });
+
+        function initializeActiveBooking() {
+            // Generate parking spots
+            generateParkingSpots();
+            
+            // Initialize countdown
+            initializeCountdown();
+            
+            // Load booking data from localStorage if exists
+            loadBookingData();
+        }
+
+        function generateParkingSpots() {
+            const spotsGrid = document.getElementById('spotsGrid');
+            const rows = ['A', 'B', 'C', 'D'];
+            const spotsPerRow = 8;
+            
+            let spotsHTML = '';
+            
+            rows.forEach(row => {
+                for (let i = 1; i <= spotsPerRow; i++) {
+                    const spotId = `${row}${i}`;
+                    const isOccupied = Math.random() > 0.7; // 30% chance of being occupied
+                    const isSelected = spotId === selectedSpot;
+                    
+                    let spotClass = 'spot-item';
+                    if (isSelected) spotClass += ' selected';
+                    else if (isOccupied) spotClass += ' occupied';
+                    else spotClass += ' available';
+                    
+                    spotsHTML += `
+                        <div class="${spotClass}" 
+                             onclick="selectSpot('${spotId}', ${isOccupied})"
+                             data-spot="${spotId}">
+                            ${spotId}
+                        </div>
+                    `;
+                }
+            });
+            
+            spotsGrid.innerHTML = spotsHTML;
+        }
+
+        function selectSpot(spotId, isOccupied) {
+            if (isOccupied) {
+                showNotification('This spot is already occupied', 'error');
+                return;
+            }
+            
+            // Remove previous selection
+            document.querySelectorAll('.spot-item').forEach(spot => {
+                spot.classList.remove('selected');
+                if (!spot.classList.contains('occupied')) {
+                    spot.classList.add('available');
+                }
+            });
+            
+            // Add selection to new spot
+            const selectedSpotElement = document.querySelector(`[data-spot="${spotId}"]`);
+            selectedSpotElement.classList.remove('available');
+            selectedSpotElement.classList.add('selected');
+            
+            // Update selected spot
+            selectedSpot = spotId;
+            document.getElementById('spotNumber').textContent = spotId;
+            
+            showNotification(`Parking spot ${spotId} selected`, 'success');
+        }
+
+        function initializeCountdown() {
+            // Set end time (3 hours from now for demo)
+            const now = new Date();
+            bookingEndTime = new Date(now.getTime() + (3 * 60 * 60 * 1000));
+            
+            // Update times display
+            updateTimesDisplay();
+            
+            // Start countdown
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateTimesDisplay() {
+            const startTime = new Date(bookingEndTime.getTime() - (3 * 60 * 60 * 1000));
+            const endTime = bookingEndTime;
+            
+            document.getElementById('startTime').textContent = formatTime(startTime);
+            document.getElementById('endTime').textContent = formatTime(endTime);
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeRemaining = bookingEndTime - now;
+            
+            if (timeRemaining <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').textContent = '00:00:00';
+                document.querySelector('.status-badge').textContent = 'Expired';
+                document.querySelector('.status-badge').className = 'status-badge status-expired';
+                showNotification('Your booking has expired', 'error');
+                return;
+            }
+            
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            
+            const countdownString = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            document.getElementById('countdown').textContent = countdownString;
+            
+            // Change color when less than 30 minutes
+            if (timeRemaining < (30 * 60 * 1000)) {
+                document.getElementById('countdown').style.color = '#dc2626';
+            } else if (timeRemaining < (60 * 60 * 1000)) {
+                document.getElementById('countdown').style.color = '#d97706';
+            }
+        }
+
+        function renewBooking() {
+            // Extend booking by 1 hour
+            bookingEndTime = new Date(bookingEndTime.getTime() + (60 * 60 * 1000));
+            
+            // Restart countdown
+            clearInterval(countdownInterval);
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+            
+            // Update times display
+            updateTimesDisplay();
+            
+            showNotification('Booking extended by 1 hour', 'success');
+        }
+
+        function markArrived() {
+            // Update status
+            const statusBadge = document.querySelector('.status-badge');
+            statusBadge.textContent = 'Checked In';
+            statusBadge.className = 'status-badge status-active';
+            
+            showNotification('You have been marked as arrived!', 'success');
+            
+            // Disable arrived button
+            event.target.disabled = true;
+            event.target.textContent = 'Already Arrived';
+            event.target.classList.add('disabled');
+        }
+
+        function cancelBooking() {
+            if (confirm('Are you sure you want to cancel your booking?')) {
+                // Clear countdown
+                clearInterval(countdownInterval);
+                
+                // Update status
+                const statusBadge = document.querySelector('.status-badge');
+                statusBadge.textContent = 'Cancelled';
+                statusBadge.className = 'status-badge status-expired';
+                
+                // Disable all action buttons
+                document.querySelectorAll('.btn-action').forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('disabled');
+                });
+                
+                showNotification('Booking cancelled successfully', 'success');
+                
+                // Redirect to booking page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'my-booking.html';
+                }, 2000);
+            }
+        }
+
+        function copyReference() {
+            const referenceNumber = document.getElementById('referenceNumber').textContent;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(referenceNumber).then(() => {
+                showNotification('Reference number copied to clipboard', 'success');
+                
+                // Change button text temporarily
+                const copyBtn = event.target;
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = referenceNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                showNotification('Reference number copied to clipboard', 'success');
+            });
+        }
+
+        function loadBookingData() {
+            // Load booking data from localStorage if exists
+            const bookingData = localStorage.getItem('bookingData');
+            if (bookingData) {
+                const data = JSON.parse(bookingData);
+                
+                // Update booking details
+                const locationElement = document.querySelector('.detail-item:nth-child(2) .value');
+                if (locationElement && data.location) {
+                    locationElement.textContent = data.location;
+                }
+                
+                // Update duration
+                const durationElement = document.querySelector('.detail-item:nth-child(4) .value');
+                if (durationElement && data.duration) {
+                    durationElement.textContent = `${data.duration} hour${data.duration > 1 ? 's' : ''}`;
+                }
+                
+                // Update vehicle
+                const vehicleElement = document.querySelector('.detail-item:nth-child(5) .value');
+                if (vehicleElement && data.vehicle) {
+                    const vehicleNames = {
+                        'sedan': 'Sedan',
+                        'suv': 'SUV',
+                        'truck': 'Truck',
+                        'motorcycle': 'Motorcycle'
+                    };
+                    vehicleElement.textContent = vehicleNames[data.vehicle] || 'Sedan';
+                }
+                
+                // Update total
+                const totalElement = document.querySelector('.detail-item:nth-child(6) .value');
+                if (totalElement && data.total) {
+                    totalElement.textContent = data.total;
+                }
+            }
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                ${type === 'error' ? 'background: #ef4444;' : 'background: #0891b2;'}
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .btn-action.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
     <script>
         loadSpots();
     </script>

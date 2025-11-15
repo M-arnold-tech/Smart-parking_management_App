@@ -3,128 +3,541 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Park Smart - My Booking</title>
+    <title>Book Parking | Park Smart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../assets/styles.css">
+    <style>
+        /* My Booking Page Specific Styles */
+        .booking-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-card h2 {
+            color: #1f2937;
+            margin-bottom: 2rem;
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+
+        .location-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .location-input-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .location-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .location-input:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+        }
+
+        .location-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .suggestions {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: #f9fafb;
+        }
+
+        .datetime-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .datetime-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .datetime-input {
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .datetime-input:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+        }
+
+        .duration-section {
+            margin-bottom: 2rem;
+        }
+
+        .duration-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .duration-btn {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .duration-btn:hover {
+            border-color: #0891b2;
+            background: #f0fdfa;
+        }
+
+        .duration-btn.active {
+            background: #0891b2;
+            color: white;
+            border-color: #0891b2;
+        }
+
+        .vehicle-section {
+            margin-bottom: 2rem;
+        }
+
+        .vehicle-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .vehicle-btn {
+            padding: 1.5rem 1rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .vehicle-btn:hover {
+            border-color: #0891b2;
+            background: #f0fdfa;
+            transform: translateY(-2px);
+        }
+
+        .vehicle-btn.active {
+            border-color: #0891b2;
+            background: #f0fdfa;
+        }
+
+        .vehicle-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .vehicle-btn span {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .vehicle-btn.active span {
+            color: #0891b2;
+        }
+
+        .vehicle-details {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row span:first-child {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .detail-row span:last-child {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .payment-card h3 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .pricing-breakdown {
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .pricing-item.total {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1f2937;
+        }
+
+        .promo-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .promo-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .promo-input:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+
+        .btn-apply {
+            padding: 0.75rem 1.5rem;
+            background: #0891b2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-apply:hover {
+            background: #0e7490;
+        }
+
+        .payment-methods {
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-method-btn {
+            width: 100%;
+            padding: 0.875rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .payment-method-btn:hover {
+            border-color: #0891b2;
+            background: #f0fdfa;
+        }
+
+        .payment-method-btn.active {
+            border-color: #0891b2;
+            background: #f0fdfa;
+        }
+
+        .payment-icon {
+            width: 32px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .btn-book {
+            width: 100%;
+            padding: 1rem;
+            background: #0891b2;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-book:hover {
+            background: #0e7490;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.2);
+        }
+
+        .btn-book:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-card {
+                position: static;
+            }
+
+            .datetime-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="my-booking-page" class="page active">
         <header class="header">
             <div class="header-left">
-                <button class="menu-btn">Menu</button>
-                <a href="../pages/find-parking.html" class="logo-link">
-                <div class="logo-small">P</div>
-                <span class="logo-text">PARK SMART</span>
+                <button class="menu-btn" onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="find-parking.html" class="logo">
+                    <div class="logo-small">P</div>
+                    <span class="logo-text">PARK SMART</span>
+                </a>
             </div>
             <nav class="header-nav">
-                <a href="find-parking.html">Find parking space</a>
-                <a href="my-booking.html">My booking</a>
-                <a href="active-booking.html">Active booking</a>
+                <a href="find-parking.html">Find Parking</a>
+                <a href="my-booking.html" class="active">Book Now</a>
+                <a href="active-booking.html">Active Booking</a>
             </nav>
             <div class="header-right">
-                <span class="icon">🔔</span>
-                <span class="icon">👤</span>
-                <button class="btn-signout" onclick="logout()">Sign out</button>
+                <button class="icon-btn" aria-label="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="btn-signout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign out
+                </button>
             </div>
         </header>
 
         <main class="main-content">
-            <div class="search-bar">
-                <input type="text" placeholder="Enter your location" class="search-input">
-                <button class="btn btn-primary">Find near by</button>
-                <button class="btn-profile">Profile</button>
-            </div>
-
             <div class="booking-container">
-                <div class="booking-left">
-                    <div class="booking-card">
-                        <h2>Almost There! Secure your spot.</h2>
+                <div class="booking-card">
+                    <h2>Complete Your Booking</h2>
+                    
+                    <div class="location-section">
+                        <p class="section-label">Parking Location</p>
+                        <div class="location-input-wrapper">
+                            <i class="fas fa-map-marker-alt location-icon"></i>
+                            <input type="text" class="location-input" id="locationInput" placeholder="Enter destination or parking name">
+                        </div>
+                        <div class="suggestions" id="locationSuggestions"></div>
+                    </div>
+
+                    <div class="datetime-section">
+                        <div class="datetime-group">
+                            <p class="section-label">Date</p>
+                            <input type="date" class="datetime-input" id="bookingDate">
+                        </div>
+                        <div class="datetime-group">
+                            <p class="section-label">Time</p>
+                            <input type="time" class="datetime-input" id="bookingTime">
+                        </div>
+                    </div>
+
+                    <div class="duration-section">
+                        <p class="section-label">How long will you be parking?</p>
+                        <div class="duration-buttons">
+                            <button class="duration-btn" onclick="selectDuration(this, '1')">1 hour</button>
+                            <button class="duration-btn" onclick="selectDuration(this, '2')">2 hours</button>
+                            <button class="duration-btn active" onclick="selectDuration(this, '3')">3 hours</button>
+                            <button class="duration-btn" onclick="selectDuration(this, '6')">6 hours</button>
+                            <button class="duration-btn" onclick="selectDuration(this, '12')">12 hours</button>
+                            <button class="duration-btn" onclick="selectDuration(this, '24')">24 hours</button>
+                        </div>
+                    </div>
+
+                    <div class="vehicle-section">
+                        <p class="section-label">Select Your Vehicle Type</p>
+                        <div class="vehicle-buttons">
+                            <button class="vehicle-btn active" onclick="selectVehicle(this, 'sedan')">
+                                <div class="vehicle-icon">🚗</div>
+                                <span>Sedan</span>
+                            </button>
+                            <button class="vehicle-btn" onclick="selectVehicle(this, 'suv')">
+                                <div class="vehicle-icon">🚙</div>
+                                <span>SUV</span>
+                            </button>
+                            <button class="vehicle-btn" onclick="selectVehicle(this, 'truck')">
+                                <div class="vehicle-icon">🚚</div>
+                                <span>Truck</span>
+                            </button>
+                            <button class="vehicle-btn" onclick="selectVehicle(this, 'motorcycle')">
+                                <div class="vehicle-icon">🏍️</div>
+                                <span>Motorcycle</span>
+                            </button>
+                        </div>
                         
-                        <div class="duration-section">
-                            <p class="section-label">How long are parking?</p>
-                            <div class="duration-buttons">
-                                <button class="duration-btn" onclick="selectDuration(this, '0-1hr')">0-1hr</button>
-                                <button class="duration-btn" onclick="selectDuration(this, '1-2hr')">1-2hr</button>
-                                <button class="duration-btn active" onclick="selectDuration(this, '2-3hr')">2-3hr</button>
-                                <button class="duration-btn" onclick="selectDuration(this, '3-6hr')">3-6hr</button>
-                                <button class="duration-btn" onclick="selectDuration(this, '12hr')">12hr</button>
-                            </div>
+                        <div class="form-group">
+                            <label for="plateNumber">
+                                <i class="fas fa-id-card"></i> Vehicle Plate Number
+                            </label>
+                            <input type="text" id="plateNumber" class="form-control" 
+                                   placeholder="Enter your plate number (e.g., RAA 123A)" 
+                                   maxlength="10" required>
+                            <small class="form-hint">Enter your vehicle plate number for parking identification</small>
                         </div>
+                    </div>
 
-                        <div class="booking-summary">
-                            <p>Estimated Cost: 200 frw per hour</p>
-                            <p>Parking for: 2-3hrs</p>
-                            <p><strong>Amount to pay: 500 frw</strong></p>
+                    <div class="vehicle-details">
+                        <div class="detail-row">
+                            <span>Plate Number</span>
+                            <span><strong id="plateDisplay">Enter plate number</strong></span>
                         </div>
-
-                        <div class="vehicle-section">
-                            <p class="section-label">Select Your Vehicle Type</p>
-                            <div class="vehicle-buttons">
-                                <button class="vehicle-btn active" onclick="selectVehicle(this, 'sedan')">
-                                    <div class="vehicle-icon">Car</div>
-                                    <span>Sedan cars</span>
-                                </button>
-                                <button class="vehicle-btn" onclick="selectVehicle(this, 'normal')">
-                                    <div class="vehicle-icon">SUV</div>
-                                    <span>Normal cars</span>
-                                </button>
-                                <button class="vehicle-btn" onclick="selectVehicle(this, 'truck')">
-                                    <div class="vehicle-icon">Truck</div>
-                                    <span>SUV & Truck</span>
-                                </button>
-                            </div>
+                        <div class="detail-row">
+                            <span>Vehicle Type</span>
+                            <span><strong id="vehicleType">Sedan</strong></span>
                         </div>
-
-                        <div class="car-details">
-                            <div class="detail-row">
-                                <span>Car details</span>
-                                <span>Plate number</span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Plate number</span>
-                                <span><strong>RAJ001T</strong></span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Vehicle type</span>
-                                <span><strong>Normal</strong></span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Process</span>
-                                <span><strong>No 2 color 200</strong></span>
-                            </div>
+                        <div class="detail-row">
+                            <span>Parking Duration</span>
+                            <span><strong id="selectedDuration">3 hours</strong></span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Estimated Rate</span>
+                            <span><strong id="hourlyRate">RWF 200/hr</strong></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="booking-right">
-                    <div class="payment-card">
-                        <h3>Payment details</h3>
-                        
-                        <div class="payment-details">
-                            <div class="detail-row">
-                                <span>Per-ath</span>
-                                <span><strong>MAN</strong></span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Amount</span>
-                                <span><strong>500 frw</strong></span>
-                            </div>
-                            <div class="detail-row">
-                                <span>Process</span>
-                                <span><strong>No 2 color 200</strong></span>
-                            </div>
+                <div class="payment-card">
+                    <h3>Booking Summary</h3>
+                    
+                    <div class="pricing-breakdown">
+                        <div class="pricing-item">
+                            <span>Subtotal</span>
+                            <span id="subtotal">RWF 600</span>
                         </div>
-
-                        <div class="payment-total">
-                            <span>Total</span>
-                            <span><strong>500 frw</strong></span>
+                        <div class="pricing-item">
+                            <span>Tax (15%)</span>
+                            <span id="tax">RWF 90</span>
                         </div>
-
-                        <p class="payment-method-label">Payment method</p>
-                        <button class="btn btn-payment">Visa</button>
-                        <button class="btn btn-payment">Mastercard</button>
-
-                        <button class="btn btn-primary btn-full" onclick="window.location.href='payment.html'">Pay now</button>
+                        <div class="pricing-item total">
+                            <span>Total Amount</span>
+                            <span id="totalAmount">RWF 690</span>
+                        </div>
                     </div>
+
+                    <div class="promo-section">
+                        <p class="section-label">Promo Code (Optional)</p>
+                        <div class="promo-input-wrapper">
+                            <input type="text" class="promo-input" id="promoCode" placeholder="Enter promo code">
+                            <button class="btn-apply" onclick="applyPromo()">Apply</button>
+                        </div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <p class="section-label">Payment Method</p>
+                        <button class="payment-method-btn active" onclick="selectPayment(this, 'card')">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Pay with Card</span>
+                        </button>
+                        <button class="payment-method-btn" onclick="selectPayment(this, 'mobile')">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile Money</span>
+                        </button>
+                        <button class="payment-method-btn" onclick="selectPayment(this, 'wallet')">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet Balance</span>
+                        </button>
+                    </div>
+
+                    <button class="btn-book" id="bookBtn" onclick="proceedToPayment()">
+                        Proceed to Payment
+                    </button>
                 </div>
             </div>
         </main>
@@ -137,6 +550,309 @@
         </footer>
     </div>
 
-    <script src="../assets/script.js"></script>
+                <div class="vehicle-section">
+                    <p class="section-label">Select Your Vehicle Type</p>
+                    <div class="vehicle-buttons">
+                        <button class="vehicle-btn active" onclick="selectVehicle(this, 'sedan')">
+                            <div class="vehicle-icon">🚗</div>
+                            <span>Sedan</span>
+                        </button>
+                        <button class="vehicle-btn" onclick="selectVehicle(this, 'suv')">
+                            <div class="vehicle-icon">🚙</div>
+                            <span>SUV</span>
+                        </button>
+                        <button class="vehicle-btn" onclick="selectVehicle(this, 'truck')">
+                            <div class="vehicle-icon">🚚</div>
+                            <span>Truck</span>
+                        </button>
+                        <button class="vehicle-btn" onclick="selectVehicle(this, 'motorcycle')">
+                            <div class="vehicle-icon">🏍️</div>
+                            <span>Motorcycle</span>
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plateNumber">
+                            <i class="fas fa-id-card"></i> Vehicle Plate Number
+                        </label>
+                        <input type="text" id="plateNumber" class="form-control"
+                               placeholder="Enter your plate number (e.g., RAA 123A)"
+                               maxlength="10" required>
+                        <small class="form-hint">Enter your vehicle plate number for parking identification</small>
+                    </div>
+                </div>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedDuration = 3;
+        let selectedVehicle = 'sedan';
+        let selectedPayment = 'card';
+        let baseRate = 200;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBookingPage();
+        });
+
+        function initializeBookingPage() {
+            // Set default date and time
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            document.getElementById('bookingDate').valueAsDate = tomorrow;
+            document.getElementById('bookingTime').value = '09:00';
+            
+            // Initialize location search
+            initializeLocationSearch();
+            
+            // Initialize pricing
+            updatePricing();
+            
+            // Add plate number input listener
+            const plateInput = document.getElementById('plateNumber');
+            if (plateInput) {
+                plateInput.addEventListener('input', function() {
+                    const plateDisplay = document.getElementById('plateDisplay');
+                    if (plateDisplay) {
+                        plateDisplay.textContent = this.value || 'Enter plate number';
+                    }
+                });
+            }
+        }
+
+        function initializeLocationSearch() {
+            const locationInput = document.getElementById('locationInput');
+            const suggestions = document.getElementById('locationSuggestions');
+            
+            // Mock parking locations
+            const parkingLocations = [
+                'Kigali City Center Parking',
+                'Kigali Heights Mall',
+                'Kigali Convention Center',
+                'KCT Mall Parking',
+                'Nyabugogo Bus Terminal',
+                'Kimironko Market Parking',
+                'Remera Shopping Center',
+                'Kigali Business District'
+            ];
+            
+            locationInput.addEventListener('input', function() {
+                const value = this.value.toLowerCase();
+                if (value.length > 0) {
+                    const filtered = parkingLocations.filter(loc => 
+                        loc.toLowerCase().includes(value)
+                    );
+                    
+                    if (filtered.length > 0) {
+                        suggestions.innerHTML = filtered.map(loc => 
+                            `<div class="suggestion-item" onclick="selectLocation('${loc}')">${loc}</div>`
+                        ).join('');
+                        suggestions.style.display = 'block';
+                    } else {
+                        suggestions.style.display = 'none';
+                    }
+                } else {
+                    suggestions.style.display = 'none';
+                }
+            });
+            
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!locationInput.contains(e.target) && !suggestions.contains(e.target)) {
+                    suggestions.style.display = 'none';
+                }
+            });
+        }
+
+        function selectLocation(location) {
+            document.getElementById('locationInput').value = location;
+            document.getElementById('locationSuggestions').style.display = 'none';
+        }
+
+        function selectDuration(btn, duration) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.duration-btn').forEach(b => 
+                b.classList.remove('active')
+            );
+            
+            // Add active class to selected button
+            btn.classList.add('active');
+            
+            // Update selected duration
+            selectedDuration = parseInt(duration);
+            
+            // Update display
+            let durationText = duration + ' hour' + (duration > 1 ? 's' : '');
+            document.getElementById('selectedDuration').textContent = durationText;
+            document.getElementById('durationDisplay').textContent = durationText;
+            
+            // Update pricing
+            updatePricing();
+        }
+
+        function selectVehicle(btn, vehicle) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.vehicle-btn').forEach(b => 
+                b.classList.remove('active')
+            );
+            
+            // Add active class to selected button
+            btn.classList.add('active');
+            
+            // Update selected vehicle
+            selectedVehicle = vehicle;
+            
+            // Update display
+            const vehicleNames = {
+                'sedan': 'Sedan',
+                'suv': 'SUV',
+                'truck': 'Truck',
+                'motorcycle': 'Motorcycle'
+            };
+            
+            document.getElementById('vehicleType').textContent = vehicleNames[vehicle];
+            
+            // Update rate based on vehicle type
+            const rates = {
+                'sedan': 200,
+                'suv': 250,
+                'truck': 300,
+                'motorcycle': 100
+            };
+            
+            baseRate = rates[vehicle];
+            document.getElementById('hourlyRate').textContent = `RWF ${baseRate}/hr`;
+            document.getElementById('baseRate').textContent = `RWF ${baseRate}/hr`;
+            
+            // Update pricing
+            updatePricing();
+        }
+
+        function selectPayment(btn, payment) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.payment-method-btn').forEach(b => 
+                b.classList.remove('active')
+            );
+            
+            // Add active class to selected button
+            btn.classList.add('active');
+            
+            // Update selected payment method
+            selectedPayment = payment;
+        }
+
+        function updatePricing() {
+            const subtotal = baseRate * selectedDuration;
+            const tax = Math.round(subtotal * 0.15);
+            const total = subtotal + tax;
+            
+            document.getElementById('subtotal').textContent = `RWF ${subtotal}`;
+            document.getElementById('tax').textContent = `RWF ${tax}`;
+            document.getElementById('totalAmount').textContent = `RWF ${total}`;
+        }
+
+        function applyPromo() {
+            const promoCode = document.getElementById('promoCode').value.trim();
+            
+            if (promoCode === 'PARK10') {
+                // Apply 10% discount
+                const subtotal = baseRate * selectedDuration;
+                const discount = subtotal * 0.1;
+                const tax = Math.round((subtotal - discount) * 0.15);
+                const total = subtotal - discount + tax;
+                
+                document.getElementById('totalAmount').textContent = `RWF ${Math.round(total)}`;
+                document.getElementById('promoCode').disabled = true;
+                document.querySelector('.btn-apply').textContent = 'Applied';
+                document.querySelector('.btn-apply').disabled = true;
+                
+                // Show success message
+                showNotification('Promo code applied! 10% discount.', 'success');
+            } else if (promoCode) {
+                showNotification('Invalid promo code', 'error');
+            }
+        }
+
+        function proceedToPayment() {
+            const location = document.getElementById('locationInput').value.trim();
+            const date = document.getElementById('bookingDate').value;
+            const time = document.getElementById('bookingTime').value;
+            
+            // Validation
+            if (!location) {
+                showNotification('Please enter a parking location', 'error');
+                return;
+            }
+            
+            if (!date || !time) {
+                showNotification('Please select date and time', 'error');
+                return;
+            }
+            
+            // Store booking data
+            const bookingData = {
+                location: location,
+                date: date,
+                time: time,
+                duration: selectedDuration,
+                vehicle: selectedVehicle,
+                plateNumber: document.getElementById('plateNumber').value || 'NOT PROVIDED',
+                paymentMethod: selectedPayment,
+                total: document.getElementById('totalAmount').textContent
+            };
+            
+            // Store in localStorage for payment page
+            localStorage.setItem('bookingData', JSON.stringify(bookingData));
+            
+            // Redirect to payment page
+            window.location.href = 'payment.html';
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                ${type === 'error' ? 'background: #ef4444;' : 'background: #10b981;'}
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
