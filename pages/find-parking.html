@@ -3,114 +3,664 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Park Smart - Find Parking</title>
-    <link rel="stylesheet" href="../assets/styles.css">
+    <title>Smart Parking - Park smart, Save time</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fb;
+        }
+
+        header {
+            background-color: white;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-icon span {
+            width: 100%;
+            height: 3px;
+            background-color: #1a1f71;
+            border-radius: 2px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #1a1f71;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo-text h1 {
+            color: #1a1f71;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-text p {
+            color: #a0a4c1;
+            font-size: 14px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #1a1f71;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #4c51bf;
+        }
+
+        .user-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #1a1f71;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .user-icon::before {
+            content: "👤";
+            font-size: 24px;
+            color: white;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        .hero-title {
+            text-align: center;
+            color: #1a1f71;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            line-height: 1.3;
+        }
+
+        .search-section {
+            background: linear-gradient(135deg, #9ca3c7 0%, #b5bace 100%);
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 60px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+        }
+
+        .search-btn {
+            padding: 18px 45px;
+            background-color: #1a1f71;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #2d3382;
+        }
+
+        .date-time-inputs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            color: #1a1f71;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            width: 200px;
+            outline: none;
+        }
+
+        .popular-section h2 {
+            color: #1a1f71;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .location-card {
+            background: linear-gradient(135deg, #c5cad9 0%, #d0d4e0 100%);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .location-image {
+            width: 100%;
+            height: 180px;
+            background-color: #e8ebf3;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-nav {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .image-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .image-dot.active {
+            background-color: white;
+        }
+
+        .image-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+
+        .image-arrow:hover {
+            background-color: white;
+        }
+
+        .image-arrow.prev {
+            left: 10px;
+        }
+
+        .image-arrow.next {
+            right: 10px;
+        }
+
+        .location-dots {
+            position: absolute;
+            top: 195px;
+            right: 30px;
+            color: #a0a4c1;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .location-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .location-name {
+            color: #1a1f71;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .location-price {
+            text-align: right;
+        }
+
+        .location-price .from {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .location-price .amount {
+            color: #1a1f71;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            color: #1a1f71;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        .reviews {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .book-now-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a1f71;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .book-now-btn:hover {
+            background-color: #2d3382;
+        }
+
+        @media (max-width: 1024px) {
+            .locations-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .search-section {
+                padding: 30px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .date-time-inputs {
+                flex-direction: column;
+            }
+
+            .input-group input {
+                width: 100%;
+            }
+
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="find-parking-page" class="page active">
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-btn">Menu</button>
-                <a href="../pages/find-parking.html" class="logo-link">
-                    <div class="logo-small">P</div>
-                    <span class="logo-text">PARK SMART</span>
-                </a>
+    <header>
+        <div class="logo-section">
+            <div class="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-            <nav class="header-nav">
-                <a href="find-parking.html">Find parking space</a>
-                <a href="my-booking.html">My booking</a>
-                <a href="active-booking.html">Active booking</a>
-            </nav>
-            <div class="header-right">
-                <span class="icon"></span>
-                <span class="icon"></span>
-                <button class="btn-signout" onclick="logout()">Sign out</button>
+            <div class="logo">
+                <div class="logo-icon">P</div>
+                <div class="logo-text">
+                    <h1>SMART PARKING</h1>
+                    <p>Park smart, Save time</p>
+                </div>
             </div>
-        </header>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#booking">Active booking</a></li>
+                <li><a href="#about">About us</a></li>
+                <li><a href="#help">Help</a></li>
+            </ul>
+        </nav>
+        <div class="user-icon"></div>
+    </header>
 
-        <main class="main-content">
-            <section class="hero">
-                <div class="hero-content">
-                    <h1>Find Your Perfect Parking Spot</h1>
-                    <p class="hero-subtitle">Secure, convenient, and affordable parking in your city</p>
-                    
-                    <form class="search-form">
-                        <div class="search-container">
-                            <div class="search-input-group">
-                                <span class="search-icon">📍</span>
-                                <input type="text" placeholder="Enter location, address, or landmark" class="search-input">
-                            </div>
-                            <button type="submit" class="btn btn-primary search-btn">
-                                <span>Find Parking</span>
-                                <span class="search-arrow">→</span>
-                            </button>
+    <main>
+        <h1 class="hero-title">FIND AND BOOK YOUR<br>PARKING SPACE WITH US</h1>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Enter location, Address, or parking name">
+                <button class="search-btn">Find parking</button>
+            </div>
+            <div class="date-time-inputs">
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="date" id="date-input">
+                </div>
+                <div class="input-group">
+                    <label>Time</label>
+                    <input type="time" id="time-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="popular-section">
+            <h2>Popular Searches :</h2>
+            <div class="locations-grid">
+                <div class="location-card" data-location="airport">
+                    <div class="location-image">
+                        <button class="image-arrow prev" onclick="changeImage(event, 'airport', -1)">‹</button>
+                        <img src="./images/" alt="Airport Parking 1">
+                        <button class="image-arrow next" onclick="changeImage(event, 'airport', 1)">›</button>
+                        <div class="image-nav">
+                            <span class="image-dot active" onclick="selectImage(event, 'airport', 0)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'airport', 1)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'airport', 2)"></span>
                         </div>
-                        
-                        <div class="search-filters">
-                            <div class="filter-group">
-                                <label for="date">Date</label>
-                                <input type="date" id="date" class="filter-input">
-                            </div>
-                            <div class="filter-group">
-                                <label for="time">Time</label>
-                                <input type="time" id="time" class="filter-input">
-                            </div>
-                            <div class="filter-group">
-                                <label for="duration">Duration</label>
-                                <select id="duration" class="filter-input">
-                                    <option value="1">1 hour</option>
-                                    <option value="2">2 hours</option>
-                                    <option value="4">4 hours</option>
-                                    <option value="8">8+ hours</option>
-                                    <option value="24">24 hours</option>
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-secondary">
-                                <span class="filter-icon"> </span>
-                                More Filters
-                            </button>
-                        </div>
-                    </form>
-                    
-                    <div class="popular-searches">
-                        <span>Popular searches:</span>
-                        <a href="#" class="tag">Airport</a>
-                        <a href="#" class="tag">Downtown</a>
-                        <a href="#" class="tag">24/7</a>
-                        <a href="#" class="tag">EV Charging</a>
                     </div>
+                    <div class="location-dots">...</div>
+                    <div class="location-info">
+                        <div class="location-name">Airport</div>
+                        <div class="location-price">
+                            <div class="from">Fro 5000/hr</div>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <div class="stars">★ ★ ★ ★</div>
+                        <div class="reviews">87 reviews</div>
+                    </div>
+                    <button class="book-now-btn">Book Now</button>
                 </div>
-                <div class="hero-overlay"></div>
-            </section>
 
-            <div class="parking-container">
-                <div class="map-section">
-                    <div class="map-placeholder">Map View</div>
+                <div class="location-card" data-location="downtown">
+                    <div class="location-image">
+                        <button class="image-arrow prev" onclick="changeImage(event, 'downtown', -1)"><</button>
+                        <img src="./images/street_parking3.jpg" alt="Downtown Parking 1">
+                        <button class="image-arrow next" onclick="changeImage(event, 'downtown', 1)">></button>
+                        <div class="image-nav">
+                            <span class="image-dot active" onclick="selectImage(event, 'downtown', 0)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'downtown', 1)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'downtown', 2)"></span>
+                        </div>
+                    </div>
+                    <div class="location-dots">...</div>
+                    <div class="location-info">
+                        <div class="location-name">Downtown</div>
+                        <div class="location-price">
+                            <div class="from">Fro 5000/hr</div>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <div class="stars">★ ★ ★ ★</div>
+                        <div class="reviews">128 reviews</div>
+                    </div>
+                    <button class="book-now-btn">Book Now</button>
                 </div>
 
-                <div class="parking-list">
-                    <h2>Available parking options</h2>
-                    <div class="parking-cards" id="parking-cards"></div>
+                <div class="location-card" data-location="kimironko">
+                    <div class="location-image">
+                        <button class="image-arrow prev" onclick="changeImage(event, 'kimironko', -1)"><</button>
+                        <img src="./images/kimironko-market.jpg" alt="Kimironko Parking 1">
+                        <button class="image-arrow next" onclick="changeImage(event, 'kimironko', 1)">></button>
+                        <div class="image-nav">
+                            <span class="image-dot active" onclick="selectImage(event, 'kimironko', 0)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'kimironko', 1)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'kimironko', 2)"></span>
+                        </div>
+                    </div>
+                    <div class="location-dots">...</div>
+                    <div class="location-info">
+                        <div class="location-name">Kimironko</div>
+                        <div class="location-price">
+                            <div class="from">Fro 5000/hr</div>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <div class="stars">★ ★ ★ ★</div>
+                        <div class="reviews">48 reviews</div>
+                    </div>
+                    <button class="book-now-btn">Book Now</button>
+                </div>
+
+                <div class="location-card" data-location="chic">
+                    <div class="location-image">
+                        <button class="image-arrow prev" onclick="changeImage(event, 'chic', -1)"><</button>
+                        <img src="images/" alt="Chic Parking 1">
+                        <button class="image-arrow next" onclick="changeImage(event, 'chic', 1)">></button>></button>
+                        <div class="image-nav">
+                            <span class="image-dot active" onclick="selectImage(event, 'chic', 0)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'chic', 1)"></span>
+                            <span class="image-dot" onclick="selectImage(event, 'chic', 2)"></span>
+                        </div>
+                    </div>
+                    <div class="location-dots">...</div>
+                    <div class="location-info">
+                        <div class="location-name">Chic</div>
+                        <div class="location-price">
+                            <div class="from">Fro 5000/hr</div>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <div class="stars">★ ★ ★ ★</div>
+                        <div class="reviews">128 reviews</div>
+                    </div>
+                    <button class="book-now-btn">Book Now</button>
                 </div>
             </div>
+        </div>
+    </main>
 
-            <div class="info-section">
-                <h3>Thank you for choosing smart space</h3>
-                <p>Find, book, and Park with absolute confidence. Our smart system lets you secure your parking space before you even leave home. With real-time availability and transparent pricing, you'll have peace of mind on every journey. Your easy park starts here!</p>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <a href="#">About Us</a>
-            <a href="#">Contact Us</a>
-            <a href="#">Terms of service</a>
-            <a href="#">Work with us</a>
-        </footer>
-    </div>
-
-    <script src="../assets/script.js"></script>
     <script>
-        loadParkingCards();
+        // Image data for each location
+        const locationImages = {
+            airport: [
+                './images/Rwanda_Airport_jpeg3.jpeg',
+                './images/Airport parking2.jpg',
+                './images/Airport parking1.avif'
+            ],
+            downtown: [
+                './images/street_parking4.jpg',
+                './images/street_parking2.jpg',
+                './images/street_parking3.jpg'
+            ],
+            kimironko: [
+                './images/kimironko-market.jpg',
+                '',
+                './images/kimironko image3.jpg'
+            ],
+            chic: [
+                './images/chic image1.jpg',
+                './images/chic image2.jpg',
+                './images/chic image3.jpg'
+            ]
+        };
+
+        let currentImageIndex = {
+            airport: 0,
+            downtown: 0,
+            kimironko: 0,
+            chic: 0
+        };
+
+        function changeImage(event, location, direction) {
+            event.stopPropagation();
+            const card = document.querySelector(`[data-location="${location}"]`);
+            const img = card.querySelector('.location-image img');
+            const dots = card.querySelectorAll('.image-dot');
+            
+            currentImageIndex[location] = (currentImageIndex[location] + direction + locationImages[location].length) % locationImages[location].length;
+            
+            img.src = locationImages[location][currentImageIndex[location]];
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentImageIndex[location]);
+            });
+        }
+
+        function selectImage(event, location, index) {
+            event.stopPropagation();
+            const card = document.querySelector(`[data-location="${location}"]`);
+            const img = card.querySelector('.location-image img');
+            const dots = card.querySelectorAll('.image-dot');
+            
+            currentImageIndex[location] = index;
+            img.src = locationImages[location][index];
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        // Set default date to today
+        const dateInput = document.getElementById('date-input');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+
+        // Set default time to current time
+        const timeInput = document.getElementById('time-input');
+        const now = new Date();
+        const currentTime = now.toTimeString().slice(0, 5);
+        timeInput.value = currentTime;
+
+        // Search functionality
+        const searchBtn = document.querySelector('.search-btn');
+        const searchInput = document.querySelector('.search-input');
+
+        searchBtn.addEventListener('click', function() {
+            const location = searchInput.value;
+            const date = dateInput.value;
+            const time = timeInput.value;
+            
+            if (location.trim()) {
+                alert(`Searching for parking at: ${location}\nDate: ${date}\nTime: ${time}`);
+            } else {
+                alert('Please enter a location to search');
+            }
+        });
+
+        // Book Now buttons
+        const bookButtons = document.querySelectorAll('.book-now-btn');
+        bookButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const locationName = this.closest('.location-card').querySelector('.location-name').textContent;
+                alert(`Booking parking at ${locationName}...`);
+            });
+        });
+
+        // Menu icon click
+        document.querySelector('.menu-icon').addEventListener('click', function() {
+            alert('Mobile menu would open here');
+        });
     </script>
 </body>
 </html>
