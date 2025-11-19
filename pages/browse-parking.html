@@ -1,0 +1,266 @@
+<!-- pages/browse-parking.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Parking - Smart Parking</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/browse-parking.css">
+  <style>
+    .parking-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:25px; }
+    .parking-card { border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:transform 0.3s ease; cursor:pointer; }
+    .parking-card:hover { transform:translateY(-5px); }
+    .parking-img { height:200px; background-size:cover; background-position:center; }
+    .parking-info { padding:20px; }
+    .parking-info h3 { margin:0 0 10px; color:#1a1f71; }
+    .rating { color:#ffa500; margin-bottom:10px; }
+    .price { font-size:20px; font-weight:700; color:#1a1f71; }
+    .spots { font-size:14px; color:#666; }
+    .features { font-size:12px; color:#64748b; margin-top:8px; padding-top:8px; border-top:1px solid #f0f0f0; }
+    
+    /* Navigation Bar Styles */
+    header {
+      background: #1a1f71;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .menu-icon {
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .menu-icon span {
+      width: 100%;
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: white;
+      color: #1a1f71;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    
+    .logo-text h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .logo-text p {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 30px;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: opacity 0.3s;
+    }
+    
+    nav a:hover {
+      opacity: 0.8;
+    }
+    
+    nav a.active {
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    
+    .user-icon {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a1f71;
+      font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      
+      nav ul {
+        gap: 20px;
+        font-size: 12px;
+      }
+      
+      .logo-text h1 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+    <div class="logo-section">
+        <div class="menu-icon" onclick="history.back()">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="logo">
+            <div class="logo-icon">P</div>
+            <div class="logo-text">
+                <h1>SMART PARKING</h1>
+                <p>Park smart, Save time</p>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="../pages/find-parking.html">Find Parking</a></li>
+            <li><a href="../pages/browse-parking.html" class="active">Browse Parking</a></li>
+            <li><a href="../pages/my-booking.html">Book Parking</a></li>
+            <li><a href="../pages/active-booking.html">Active Booking</a></li>
+            <li><a href="#help">Help</a></li>
+        </ul>
+    </nav>
+    <div class="user-icon"></div>
+</header>
+
+<main style="max-width:1200px;margin:60px auto;padding:0 40px">
+  <h1 class="page-title">All Parking Locations</h1>
+  <div class="parking-grid">
+    <div class="parking-card" onclick="selectParking('Airport', 150)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Airport Parking</h3>
+        <div class="rating">★★★★☆ 4.0 (87 reviews)</div>
+        <div class="price">RWF 150/hr</div>
+        <div class="spots">45 spots available</div>
+        <div class="features">24/7 Security • Shuttle Service</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Downtown', 150)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1571896349842-33c89424de5d?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Downtown Central</h3>
+        <div class="rating">★★★★☆ 4.0 (128 reviews)</div>
+        <div class="price">RWF 150/hr</div>
+        <div class="spots">62 spots available</div>
+        <div class="features">City Center • Covered Parking</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Kimironko', 150)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Kimironko Market</h3>
+        <div class="rating">★★★★☆ 4.0 (48 reviews)</div>
+        <div class="price">RWF 150/hr</div>
+        <div class="spots">38 spots available</div>
+        <div class="features">Market Access • Affordable</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Chic', 150)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1542362567-b07e54358753?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Chic District</h3>
+        <div class="rating">★★★★☆ 4.0 (128 reviews)</div>
+        <div class="price">RWF 150/hr</div>
+        <div class="spots">55 spots available</div>
+        <div class="features">Shopping Area • Premium</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Kigali City Center', 150)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Kigali City Center</h3>
+        <div class="rating">★★★★☆ 4.8 (156 reviews)</div>
+        <div class="price">RWF 150/hr</div>
+        <div class="spots">28 spots available</div>
+        <div class="features">Business District • Secure</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Kigali Heights Mall', 200)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1589272590143-83e5d954c5d4?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Kigali Heights Mall</h3>
+        <div class="rating">★★★★☆ 4.7 (89 reviews)</div>
+        <div class="price">RWF 200/hr</div>
+        <div class="spots">42 spots available</div>
+        <div class="features">Shopping Mall • Valet Available</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Convention Centre', 300)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1497366216548-375f7030cbb5?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Convention Centre</h3>
+        <div class="rating">★★★★☆ 4.9 (67 reviews)</div>
+        <div class="price">RWF 300/hr</div>
+        <div class="spots">15 spots available</div>
+        <div class="features">Event Venue • VIP Parking</div>
+      </div>
+    </div>
+
+    <div class="parking-card" onclick="selectParking('Remera Business District', 250)">
+      <div class="parking-img" style="background-image:url('https://images.unsplash.com/photo-1604076910021-50d2060ddfa4?w=600&h=400&fit=crop')"></div>
+      <div class="parking-info">
+        <h3>Remera Business District</h3>
+        <div class="rating">★★★★☆ 4.6 (94 reviews)</div>
+        <div class="price">RWF 250/hr</div>
+        <div class="spots">22 spots available</div>
+        <div class="features">Business Hub • Modern Facilities</div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+function selectParking(name, rate) {
+  const data = { location: name, rate };
+  localStorage.setItem("selectedParking", JSON.stringify(data));
+  location.href = "my-booking.html";
+}
+</script>
+  <script src="../assets/js/browse-parking.js"></script>
+</body>
+</html>
