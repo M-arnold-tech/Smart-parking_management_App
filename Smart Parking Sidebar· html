@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar App</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light {
+            background: white;
+            color: black;
+        }
+
+        body.dark {
+            background: #111;
+            color: white;
+        }
+
+        /* SIDEBAR */
+        #sidebar {
+            width: 260px;
+            background: #2b2b2b;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -260px;
+            padding: 20px;
+            transition: 0.4s;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #toggleSidebar {
+            padding: 10px 15px;
+            background: purple;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            border-radius: 5px;
+        }
+
+        section {
+            margin-top: 20px;
+        }
+
+        section h3 {
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        button, li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 6px;
+            background: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button:hover, li:hover {
+            background: #666;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .icon {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        main {
+            padding: 40px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body class="light">
+
+    <button id="toggleSidebar">☰</button>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+        <h2>Menu</h2>
+
+        <!-- THEMES -->
+        <section>
+            <h3><span class="icon">🌗</span> Themes</h3>
+            <button onclick="setTheme('light')"><span class="icon">🌞</span> Light</button>
+            <button onclick="setTheme('dark')"><span class="icon">🌙</span> Dark</button>
+        </section>
+
+        <!-- LANGUAGES -->
+        <section>
+            <h3><span class="icon">🌐</span> Languages</h3>
+            <button onclick="setLanguage('en')"><span class="icon">🇬🇧</span> English</button>
+            <button onclick="setLanguage('fr')"><span class="icon">🇫🇷</span> French</button>
+            <button onclick="setLanguage('kin')"><span class="icon">🇷🇼</span> Kinyarwanda</button>
+        </section>
+
+        <!-- SETTINGS -->
+        <section>
+            <h3>Settings</h3>
+            <ul>
+                <li onclick="openPage('profile')"><span class="icon">👤</span> Profile</li>
+                <li onclick="openPage('help')"><span class="icon">❓</span> Help</li>
+                <li onclick="openPage('notifications')"><span class="icon">🔔</span> Notifications</li>
+                <li onclick="logout()"><span class="icon">⎋</span> Logout</li>
+            </ul>
+        </section>
+    </aside>
+
+    <main id="content">
+        <h1 id="pageTitle">Welcome</h1>
+        <p id="pageDescription">Choose options from the sidebar.</p>
+    </main>
+
+    <script>
+        // -------------------------------
+        // GLOBAL SIDEBAR TOGGLE
+        // -------------------------------
+        document.getElementById("toggleSidebar").onclick = () => {
+            document.getElementById("sidebar").classList.toggle("open");
+        };
+
+        // -------------------------------
+        // THEMES
+        // -------------------------------
+        function setTheme(theme) {
+            document.body.className = theme;
+            localStorage.setItem("theme", theme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.body.className = savedTheme;
+        }
+
+        // -------------------------------
+        // TRANSLATIONS
+        // -------------------------------
+        const translations = {
+            en: {
+                title: "Welcome",
+                description: "Choose options from the sidebar.",
+                profile: "This is your profile page.",
+                help: "How can we help you?",
+                notifications: "These are your notifications."
+            },
+            fr: {
+                title: "Bienvenue",
+                description: "Choisissez des options depuis le menu.",
+                profile: "Voici votre profil.",
+                help: "Comment pouvons-nous vous aider ?",
+                notifications: "Voici vos notifications."
+            },
+            kin: {
+                title: "Murakaza neza",
+                description: "Hitamo ibintu uri ku ruhande.",
+                profile: "Aha niho profile yawe iri.",
+                help: "Twagufasha dute?",
+                notifications: "Ubutumwa bwawe buri hano."
+            }
+        };
+
+        // Change language
+        function setLanguage(lang) {
+            localStorage.setItem("language", lang);
+            applyLanguage();
+        }
+
+        // Load saved language
+        function applyLanguage() {
+            const lang = localStorage.getItem("language") || "en";
+            const t = translations[lang];
+
+            document.getElementById("pageTitle").textContent = t.title;
+            document.getElementById("pageDescription").textContent = t.description;
+        }
+
+        // -------------------------------
+        // PAGE SWITCHING
+        // -------------------------------
+        function openPage(page) {
+            const lang = localStorage.getItem("language") || "en";
+            const t = translations[lang];
+
+            document.getElementById("pageTitle").textContent =
+                page.charAt(0).toUpperCase() + page.slice(1);
+
+            document.getElementById("pageDescription").textContent =
+                t[page] || t.description;
+        }
+
+        // -------------------------------
+        // LOGOUT
+        // -------------------------------
+        function logout() {
+            alert("You are now logged out.");
+            window.location.href = "login.html";
+        }
+
+        // -------------------------------
+        // ON PAGE LOAD
+        // -------------------------------
+        window.onload = () => {
+            loadTheme();
+            applyLanguage();
+        };
+    </script>
+
+</body>
+</html>
