@@ -1,129 +1,86 @@
+<!-- pages/payment.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Park Smart - Payment</title>
-    <link rel="stylesheet" href="../assets/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Payment - Smart Parking</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/payment.css">
 </head>
 <body>
-    <div id="payment-page" class="page active">
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-btn" onclick="goBack()">Back</button>
-                <div class="logo-small">P</div>
-                <span class="logo-text">PARK SMART</span>
-            </div>
-            <div class="header-right">
-                <span class="icon">🔔</span>
-                <span class="icon">👤</span>
-                <button class="btn-signout" onclick="logout()">Sign out</button>
-            </div>
-        </header>
 
-        <main class="main-content">
-            <div class="payment-container">
-                <div class="payment-left">
-                    <h1>Payment Method</h1>
-                    
-                    <div class="payment-methods">
-                        <div class="payment-method-card" onclick="selectPaymentMethod(this, 'card')">
-                            <div class="method-icon">Card</div>
-                            <h3>Credit/Debit Card</h3>
-                            <p>Visa, Mastercard, American Express</p>
-                        </div>
-                        
-                        <div class="payment-method-card" onclick="selectPaymentMethod(this, 'mobile')">
-                            <div class="method-icon">Mobile</div>
-                            <h3>Mobile Money</h3>
-                            <p>MTN Money, Airtel Money</p>
-                        </div>
-                        
-                        <div class="payment-method-card" onclick="selectPaymentMethod(this, 'bank')">
-                            <div class="method-icon">Bank</div>
-                            <h3>Bank Transfer</h3>
-                            <p>Direct bank transfer</p>
-                        </div>
-                        
-                        <div class="payment-method-card" onclick="selectPaymentMethod(this, 'wallet')">
-                            <div class="method-icon">Wallet</div>
-                            <h3>Digital Wallet</h3>
-                            <p>PayPal, Google Pay</p>
-                        </div>
-                    </div>
+<header>
+  <div class="logo-section">
+    <div class="menu-icon" onclick="history.back()">...</div>
+    <div class="logo">...</div>
+  </div>
+  <nav>...</nav>
+  <div class="user-icon"></div>
+</header>
 
-                    <div id="card-form" class="payment-form" style="display: none;">
-                        <h3>Card Details</h3>
-                        <input type="text" placeholder="Card Holder Name" class="form-input">
-                        <input type="text" placeholder="Card Number" class="form-input" maxlength="19">
-                        <div class="form-row">
-                            <input type="text" placeholder="MM/YY" class="form-input" maxlength="5">
-                            <input type="text" placeholder="CVV" class="form-input" maxlength="3">
-                        </div>
-                    </div>
+<main>
+  <div class="payment-container">
+    <div class="payment-left">
+      <h1 class="page-title">Complete Payment</h1>
 
-                    <div id="mobile-form" class="payment-form" style="display: none;">
-                        <h3>Mobile Money Details</h3>
-                        <div class="mobile-providers">
-                            <button class="provider-btn" onclick="selectProvider(this, 'mtn')">
-                                <img src="../images/mtn.svg" alt="MTN">
-                                <span>MTN Money</span>
-                            </button>
-                            <button class="provider-btn" onclick="selectProvider(this, 'airtel')">
-                                <img src="../images/airtel.svg" alt="Airtel">
-                                <span>Airtel Money</span>
-                            </button>
-                        </div>
-                        <input type="tel" placeholder="Phone Number" class="form-input">
-                        <input type="password" placeholder="PIN" class="form-input" maxlength="4">
-                    </div>
-                </div>
+      <div class="methods-grid">
+        <div class="method-card" data-method="momo" onclick="selectMethod('momo')">
+          <div class="icon-circle">Mobile</div>
+          <h3>Mobile Money</h3>
+          <p>MTN • Airtel</p>
+        </div>
+        <div class="method-card" data-method="card" onclick="selectMethod('card')">
+          <div class="icon-circle">Card</div>
+          <h3>Credit/Debit Card</h3>
+          <p>Visa • Mastercard</p>
+        </div>
+      </div>
 
-                <div class="payment-right">
-                    <div class="payment-summary">
-                        <h2>Order Summary</h2>
-                        
-                        <div class="summary-item">
-                            <span>Parking</span>
-                            <span>Chic Parking</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Duration</span>
-                            <span>2-3 hours</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Rate</span>
-                            <span>600 frw/hr</span>
-                        </div>
-                        
-                        <div class="summary-divider"></div>
-                        
-                        <div class="summary-item total">
-                            <span>Total Amount</span>
-                            <span class="total-price">1,500 frw</span>
-                        </div>
+      <!-- Mobile Money Form (DEFAULT SHOWN) -->
+      <div id="momo-form" class="form-card">
+        <h3>Pay with Mobile Money</h3>
+        <div class="provider-grid">
+          <button class="provider-btn active" data-provider="mtn">
+            <img src="../assets/images/mtn.svg" alt="MTN"> MTN MoMo
+          </button>
+          <button class="provider-btn" data-provider="airtel">
+            <img src="../assets/images/airtel.svg" alt="Airtel"> Airtel Money
+          </button>
+        </div>
+        <input type="tel" id="phone" placeholder="+250 78X XXX XXX" class="form-input" required>
+        <p class="info-text">You’ll receive a payment prompt on your phone</p>
+      </div>
 
-                        <div class="payment-info">
-                            <p>Secure payment</p>
-                            <p>Instant confirmation</p>
-                            <p>Money-back guarantee</p>
-                        </div>
-
-                        <button class="btn btn-primary btn-full" onclick="window.location.href='payment-success.html'">Pay Now</button>
-                        <button class="btn btn-secondary btn-full" onclick="goBack()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <a href="#">About Us</a>
-            <a href="#">Contact Us</a>
-            <a href="#">Terms of service</a>
-            <a href="#">Work with us</a>
-        </footer>
+      <!-- Card Form (HIDDEN by default) -->
+      <div id="card-form" class="form-card" style="display:none">
+        <h3>Card Details</h3>
+        <input type="text" placeholder="Cardholder Name" class="form-input">
+        <input type="text" placeholder="1234 5678 9012 3456" class="form-input" maxlength="19">
+        <div class="row">
+          <input type="text" placeholder="MM/YY" class="form-input" maxlength="5">
+          <input type="text" placeholder="CVV" class="form-input" maxlength="4">
+        </div>
+      </div>
     </div>
 
-    <script src="../assets/script.js"></script>
+    <div class="payment-right">
+      <div class="summary-card">
+        <h2>Booking Summary</h2>
+        <div class="summary-row"><span>Location</span><strong id="loc">Kigali City Center</strong></div>
+        <div class="summary-row"><span>Duration</span><strong id="dur">3 hours</strong></div>
+        <div class="summary-row"><span>Vehicle</span><strong id="veh">Sedan</strong></div>
+        <div class="divider"></div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <strong id="total">RWF 15,000</strong>
+        </div>
+        <button class="btn-pay" onclick="processPayment()">Pay Now →</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/payment.js"></script>
 </body>
 </html>
