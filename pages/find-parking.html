@@ -481,7 +481,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">87 reviews</div>
                     </div>
-                    <button class="book-now-btn">Book Now</button>
+                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
                 </div>
 
                 <div class="location-card" data-location="downtown">
@@ -506,7 +506,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">128 reviews</div>
                     </div>
-                    <button class="book-now-btn">Book Now</button>
+                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
                 </div>
 
                 <div class="location-card" data-location="kimironko">
@@ -531,7 +531,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">48 reviews</div>
                     </div>
-                    <button class="book-now-btn">Book Now</button>
+                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
                 </div>
 
                 <div class="location-card" data-location="chic">
@@ -556,7 +556,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">128 reviews</div>
                     </div>
-                    <button class="book-now-btn">Book Now</button>
+                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
                 </div>
             </div>
         </div>
@@ -654,8 +654,10 @@
         const bookButtons = document.querySelectorAll('.book-now-btn');
         bookButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const locationName = this.closest('.location-card').querySelector('.location-name').textContent;
-                alert(`Booking parking at ${locationName}...`);
+                const bookingPage = this.getAttribute('href');
+                if (bookingPage) {
+                    window.location.href = bookingPage;
+                }
             });
         });
 
