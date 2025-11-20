@@ -81,7 +81,7 @@ def confirm_reservation(res_id):
     return {"success": False, "message": f"Can't confirm reservation in '{res['status']}' state."}
   
   # Check for availability
-  cursor.execute("SELECT spot_number FFROM parking_spot WHERE spot_id=%s", (res["spot_id"],))
+  cursor.execute("SELECT spot_number FROM parking_spot WHERE spot_id=%s", (res["spot_id"],))
   spot = cursor.fetchone()
   if not spot or spot["spot_number"] <= 0:
     cursor.close(); conn.close()
@@ -93,12 +93,13 @@ def confirm_reservation(res_id):
   cursor.execute("""
       UPDATE reservation SET status='confirmed' WHERE res_id=%s
   """, (res_id,))
-
+  # Update parking spot availability
+  is_available = 1 if new_available_spots > 0 else 0
   cursor.execute("""
-      UPDATE parking_spot
-      SET spot_number=%s, is_available=CASE WHEN %s > 0 THEN 1 ELSE 0 END
-      WHERE spot_id=%s
-  """, (new_available_spots, res["spot_id"]))
+    UPDATE parking_spot
+    SET spot_number=%s, is_available=%s
+    WHERE spot_id=%s
+  """, (new_available_spots, is_available, res["spot_id"]))
   conn.commit()
   
   cursor.close()

@@ -23,9 +23,11 @@ def signup_driver(data):
         return {"success": False, "message": "Database connection failed."}
     cursor = conn.cursor(dictionary=True)
     
-    # Check for duplicates
-    cursor.execute("SELECT * FROM driver WHERE username=%s OR email=%s OR vehicle_plate=%s",
-                   (username, email, phone, vehicle_plate))
+    # Check for duplicates (username, email, vehicle_plate, or phone_number)
+    cursor.execute(
+        "SELECT * FROM driver WHERE username=%s OR email=%s OR vehicle_plate=%s OR phone_number=%s",
+        (username, email, vehicle_plate, phone)
+    )
     if cursor.fetchone():
         cursor.close()
         conn.close()

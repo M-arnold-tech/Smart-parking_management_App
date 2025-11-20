@@ -34,11 +34,22 @@ def add_parking_spot(data):
     return{"success": False, "message": "Parking lot already exists!"}
   
   # Add parking lot
+  # Map to schema: parking_spot has columns (spot_id, spot_number, operator_id, location, price_per_hour, is_available,...)
+  try:
+    spot_number = int(total_spots)
+  except Exception:
+    cursor.close()
+    conn.close()
+    return {"success": False, "message": "Invalid total_spots; must be an integer."}
+
+  is_available = 1 if spot_number > 0 else 0
+
   cursor.execute(
     """
-    INSERT INTO parking_spot (operaotr_id, location, price_per_hour, total_spots, available_spots, is_available)
+    INSERT INTO parking_spot (operator_id, spot_number, location, price_per_hour, is_available)
+    VALUES (%s, %s, %s, %s, %s)
     """,
-    (operator_id, location, price_per_hour, total_spots)
+    (operator_id, spot_number, location, price_per_hour, is_available)
   )
   conn.commit()
   cursor.close()
