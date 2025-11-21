@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Booking - Smart Parking</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/active-booking.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-section">
+        <div class="menu-icon" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="logo">
+            <div class="logo-icon">P</div>
+            <div class="logo-text">
+                <h1>SMART PARKING</h1>
+                <p>Park smart, Save time</p>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="../pages/find-parking.html">Find Parking</a></li>
+            <li><a href="../pages/browse-parking.html">Browse Parking</a></li>
+            <li><a href="../pages/my-booking.html">My Bookings</a></li>
+            <li><a href="../pages/active-booking.html" class="active">Active Booking</a></li>
+            <li><a href="#help">Help</a></li>
+        </ul>
+    </nav>
+    <div class="user-icon" onclick="toggleUserMenu()"></div>
+</header>
+
+<main>
+    <h1 class="hero-title">YOUR ACTIVE BOOKING</h1>
+
+    <div class="active-container">
+        <div class="main-card">
+            <div class="session-header">
+                <h2>Kigali City Center</h2>
+                <span class="status-badge active">Active</span>
+            </div>
+
+            <div class="time-info">
+                <div class="time-box">
+                    <label>Start Time</label>
+                    <div class="time-value" id="startTime">10:00 AM</div>
+                </div>
+                <div class="time-box">
+                    <label>End Time</label>
+                    <div class="time-value" id="endTime">01:00 PM</div>
+                </div>
+            </div>
+
+            <div class="countdown-section">
+                <div class="countdown" id="countdown">02:45:30</div>
+                <div class="countdown-label">Time Remaining</div>
+            </div>
+
+            <div class="action-grid">
+                <button class="btn-primary" onclick="renewBooking()">Renew Session</button>
+                <button class="btn-success" onclick="markArrived()">I Have Arrived</button>
+                <button class="btn-danger" onclick="cancelBooking()">Cancel Booking</button>
+            </div>
+
+            <div class="parking-images-section">
+                <h3>Your Selected Parking Location</h3>
+                <div class="parking-images-grid" id="parkingImagesGrid">
+                    <!-- Parking images will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <h3>Booking Summary</h3>
+            <div class="summary-item">
+                <span>Location</span>
+                <strong>Kigali City Center</strong>
+            </div>
+            <div class="summary-item">
+                <span>Spot</span>
+                <strong id="spotNumber">A3</strong>
+            </div>
+            <div class="summary-item">
+                <span>Duration</span>
+                <strong>3 Hours</strong>
+            </div>
+            <div class="summary-item">
+                <span>Vehicle</span>
+                <strong>Sedan</strong>
+            </div>
+            <div class="summary-item total">
+                <span>Total Paid</span>
+                <strong>RWF 15,000</strong>
+            </div>
+
+            <div class="qr-section">
+                <div class="qr-placeholder">QR Code</div>
+                <div class="ref-number" id="referenceNumber">PK-2025-0891</div>
+                <button class="copy-btn" onclick="copyReference()">Copy Reference</button>
+            </div>
+
+            <button class="btn-full btn-primary" onclick="renewBooking()">Extend Time +1hr</button>
+        </div>
+    </div>
+</main>
+
+<script src="../assets/js/active-booking.js"></script>
+</body>
+</html>

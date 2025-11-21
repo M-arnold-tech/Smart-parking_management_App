@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success - Smart Parking</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/payment-success.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-section">
+        <div class="menu-icon" onclick="history.back()">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="logo">
+            <div class="logo-icon">P</div>
+            <div class="logo-text">
+                <h1>SMART PARKING</h1>
+                <p>Park smart, Save time</p>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="../pages/find-parking.html">Find Parking</a></li>
+            <li><a href="../pages/browse-parking.html">Browse Parking</a></li>
+            <li><a href="../pages/my-booking.html">My Bookings</a></li>
+            <li><a href="../pages/active-booking.html">Active Booking</a></li>
+            <li><a href="#help">Help</a></li>
+        </ul>
+    </nav>
+    <div class="user-icon"></div>
+</header>
+
+<main>
+    <div class="success-container">
+        <div class="check-circle">
+            <div class="check-icon">✓</div>
+        </div>
+
+        <h1 class="success-title">Payment Successful!</h1>
+        <p class="success-msg">Your parking spot is confirmed and ready.</p>
+
+        <div class="details-grid">
+            <div class="detail-card">
+                <h3>Booking Details</h3>
+                <div class="row"><span>Booking ID</span><strong id="bookingId">BK-2025-0481</strong></div>
+                <div class="row"><span>Location</span><strong id="location">Kigali City Center</strong></div>
+                <div class="row"><span>Spot</span><strong id="spot">A12</strong></div>
+                <div class="row"><span>Duration</span><strong id="duration">3 hours</strong></div>
+                <div class="row"><span>Vehicle</span><strong id="vehicle">Sedan</strong></div>
+            </div>
+
+            <div class="detail-card">
+                <h3>Time & Payment</h3>
+                <div class="row"><span>Date</span><strong id="date">Nov 20, 2025</strong></div>
+                <div class="row"><span>Start</span><strong id="start">02:00 PM</strong></div>
+                <div class="row"><span>End</span><strong id="end">05:00 PM</strong></div>
+                <div class="row"><span>Amount Paid</span><strong id="amount">RWF 15,000</strong></div>
+                <div class="row"><span>Method</span><strong id="method">Mobile Money</strong></div>
+            </div>
+        </div>
+
+        <div class="qr-card">
+            <div class="qr-box">QR CODE</div>
+            <p>Show this at the entrance gate</p>
+            <div class="ref-code" id="refCode">PK-2025-0481</div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" onclick="location.href='../pages/active-booking.html'">View Active Booking</button>
+            <button class="btn-secondary" onclick="location.href='../pages/find-parking.html'">Book Another Spot</button>
+        </div>
+
+        <div class="note-box">
+            <p>Confirmation sent to your phone & email</p>
+            <p>You’ll get a reminder 30 mins before expiry</p>
+        </div>
+    </div>
+</main>
+
+<script src="../assets/js/payment-success.js"></script>
+</body>
+</html>

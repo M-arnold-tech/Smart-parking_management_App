@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Parking - Smart Parking</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/my-booking.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-section">
+        <div class="menu-icon" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="logo">
+            <div class="logo-icon">P</div>
+            <div class="logo-text">
+                <h1>SMART PARKING</h1>
+                <p>Park smart, Save time</p>
+            </div>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="../pages/find-parking.html">Find Parking</a></li>
+            <li><a href="../pages/browse-parking.html">Browse Parking</a></li>
+            <li><a href="../pages/my-booking.html" class="active">Book Parking</a></li>
+            <li><a href="../pages/active-booking.html">Active Booking</a></li>
+            <li><a href="#help">Help</a></li>
+        </ul>
+    </nav>
+    <div class="user-icon" onclick="toggleUserMenu()"></div>
+</header>
+
+<main>
+    <h1 class="hero-title">BOOK YOUR PARKING SPACE</h1>
+
+    <div class="booking-container">
+        <div class="form-card">
+            <!-- Booking Summary Section -->
+            <div class="booking-summary-section">
+                <h3>Your Booking Details</h3>
+                <div class="booking-preview">
+                    <div class="preview-image" style="background-image: url('https://source.unsplash.com/random/600x400/?parking,garage')"></div>
+                    <div class="preview-info">
+                        <h4 id="selectedLocation">Select a parking location</h4>
+                        <p id="selectedDate">Date: Not selected</p>
+                        <p id="selectedTime">Time: Not selected</p>
+                        <p id="selectedDuration">Duration: Not selected</p>
+                        <p id="selectedVehicle">Vehicle: Not selected</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <label>Parking Location</label>
+                <div class="input-wrapper">
+                    <input type="text" id="locationInput" placeholder="Search location or parking name">
+                    <div class="suggestions" id="suggestions"></div>
+                </div>
+            </div>
+
+            <div class="datetime-grid">
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="date" id="bookingDate">
+                </div>
+                <div class="input-group">
+                    <label>Time</label>
+                    <input type="time" id="bookingTime">
+                </div>
+            </div>
+
+            <div class="section">
+                <label>Duration</label>
+                <div class="duration-grid">
+                    <button class="duration-btn" data-hours="1">1hr</button>
+                    <button class="duration-btn" data-hours="2">2hr</button>
+                    <button class="duration-btn active" data-hours="3">3hr</button>
+                    <button class="duration-btn" data-hours="6">6hr</button>
+                    <button class="duration-btn" data-hours="12">12hr</button>
+                    <button class="duration-btn" data-hours="24">24hr</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <label>Vehicle Type</label>
+                <div class="vehicle-grid">
+                    <button class="vehicle-btn active" data-type="sedan">Sedan</button>
+                    <button class="vehicle-btn" data-type="suv">SUV</button>
+                    <button class="vehicle-btn" data-type="truck">Truck</button>
+                    <button class="vehicle-btn" data-type="motorcycle">Motorcycle</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <label>Plate Number</label>
+                <div class="plate-input-container">
+                    <div class="plate-icon"> </div>
+                    <input type="text" id="plateNumber" placeholder="Enter your plate number (e.g. RAB 123X)" maxlength="10" class="plate-input">
+                    <div class="plate-format-hint">Format: RAB 123X</div>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <div class="summary-row"><span>Duration</span><strong id="durDisplay">3 hours</strong></div>
+                <div class="summary-row"><span>Vehicle</span><strong id="vehDisplay">Sedan</strong></div>
+                <div class="summary-row"><span>Rate</span><strong id="rateDisplay">RWF 5,000/hr</strong></div>
+            </div>
+        </div>
+
+        <div class="payment-card">
+            <h3>Payment Summary</h3>
+            <div class="price-row"><span>Subtotal</span><strong id="subtotal">RWF 15,000</strong></div>
+            <div class="price-row"><span>Tax (18%)</span><strong id="tax">RWF 2,700</strong></div>
+            <div class="price-row total"><span>Total</span><strong id="total">RWF 17,700</strong></div>
+
+            <div class="promo-section">
+                <input type="text" id="promoCode" placeholder="Promo code">
+                <button onclick="applyPromo()">Apply</button>
+            </div>
+
+            <div class="payment-methods">
+                <button class="pay-btn active" data-method="card">Card</button>
+                <button class="pay-btn" data-method="momo">Mobile Money</button>
+                <button class="pay-btn" data-method="wallet">Wallet</button>
+            </div>
+
+            <button class="book-btn" onclick="proceedToPayment()">Proceed to Payment →</button>
+        </div>
+    </div>
+</main>
+
+<script src="../assets/js/my-booking.js"></script>
+</body>
+</html>

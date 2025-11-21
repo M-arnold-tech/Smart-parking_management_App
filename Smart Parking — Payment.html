@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Parking — Payment</title>
+
+<style>
+*{box-sizing:border-box;font-family:Inter, system-ui, Arial, sans-serif}
+body{margin:0;background:#f3f4f6;color:#1a1633}
+.container{max-width:1100px;margin:28px auto;padding:20px}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:8px;background:#14103b;color:#fff;
+display:flex;align-items:center;justify-content:center;font-weight:700}
+nav a{margin:0 10px;color:#27224a;text-decoration:none;font-weight:600}
+
+/* Layout */
+.grid{display:grid;grid-template-columns:1fr 420px;gap:18px}
+.card{background:#c7c6d4;padding:22px;border-radius:8px;min-height:520px}
+.card h2{margin:0 0 14px;color:#fff}
+
+/* Left Panel */
+.durations{display:flex;gap:12px;margin-bottom:18px}
+.dur-btn{background:#eee;border-radius:10px;padding:12px 18px;border:none;
+cursor:pointer;font-weight:700}
+.dur-btn.active{background:#fff;color:#14103b;box-shadow:0 4px 0 rgba(20,16,59,0.12)}
+.info-box{background:#fff;padding:18px;border-radius:10px;margin-bottom:16px;color:#14103b}
+.two-row{display:flex;gap:14px;margin-bottom:14px}
+.field{flex:1}
+.input, .select{width:100%;padding:14px;border-radius:10px;border:1px solid rgba(20,16,59,0.08);background:#fff}
+.arrival{background:#fff;padding:18px;border-radius:10px;width:160px;text-align:center;
+font-weight:700;margin-bottom:12px}
+.done-date{text-align:right;color:#fff;font-size:13px;margin-top:26px}
+
+/* Right Panel */
+.payment-box{background:#fff;padding:22px;border-radius:12px}
+.line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(20,16,59,0.06);align-items:center}
+.line:last-child{border-bottom:none}
+.pay-methods{display:flex;gap:12px;margin-top:16px}
+.pay-btn{background:#eee;padding:12px 18px;border-radius:10px;border:none;cursor:pointer}
+.pay-btn.active{background:#fff;box-shadow:0 4px 0 rgba(20,16,59,0.12)}
+.pay-now{display:block;margin:26px auto 0;padding:16px 36px;border-radius:40px;
+background:#14103b;color:#fff;border:none;font-weight:700;cursor:pointer}
+
+/* Responsive */
+@media(max-width:980px){
+  .grid{grid-template-columns:1fr;}
+  .card{min-height:auto}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <div class="brand">
+    <div class="logo">P</div>
+    <div>
+      <div style="font-weight:800;color:#14103b">SMART PARKING</div>
+      <small style="color:#6b6b8a">Park smart, Save time</small>
+    </div>
+  </div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Active booking</a>
+    <a href="#">About us</a>
+    <a href="#">Help</a>
+  </nav>
+</header>
+
+<main class="grid">
+
+<!-- LEFT: Booking Details -->
+<section class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>BOOKING DETAILS</h2>
+    <div id="locationTag" style="color:#fff;font-weight:700">AT: Kimironko</div>
+  </div>
+
+  <p style="color:#fff;margin-top:10px;font-weight:600">How long are parking?</p>
+
+  <div class="durations" id="durations">
+    <button class="dur-btn" data-hours="1">0-1hr</button>
+    <button class="dur-btn" data-hours="2">1-2hr</button>
+    <button class="dur-btn active" data-hours="3">2-3hr</button>
+    <button class="dur-btn" data-hours="4">3-4hr</button>
+  </div>
+
+  <div class="info-box">
+    <div id="estimated">Estimated Cost: <span id="pricePerHour">200 frw</span> per hour</div>
+    <div id="parkingFor">Parking for: 2-3hrs</div>
+    <div id="amountToPay">Amount to pay: <strong id="amountText">600 frw</strong></div>
+  </div>
+
+  <div class="two-row">
+    <div class="field">
+      <div style="font-size:13px;color:#fff;margin-bottom:8px">Select Vehicle Type</div>
+
+      <!-- NEW VEHICLE DROPDOWN -->
+      <select class="select" id="vehicleType">
+        <option value="Car">Car</option>
+        <option value="SUV">SUV</option>
+        <option value="Taxi">Taxi</option>
+        <option value="Motorcycle">Motorcycle</option>
+        <option value="Bus">Bus</option>
+        <option value="Truck">Truck</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <div style="font-size:13px;color:#fff;margin-bottom:8px">Plate number</div>
+      <input class="input" id="plate" placeholder="RAJ001T">
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:13px;color:#fff;margin-bottom:8px">Arrival time</div>
+    <div class="arrival" id="arrivalTime">2:00 PM</div>
+  </div>
+
+  <div class="done-date">Done at 15/11/2025</div>
+</section>
+
+
+<!-- RIGHT: Payment Details -->
+<aside class="card">
+  <h2 style="color:#fff">Payment details</h2>
+
+  <div class="payment-box">
+    <div class="line"><div>Per-ath</div><div id="perAth">MAN</div></div>
+    <div class="line"><div>Amount</div><div id="payAmount">500 frw</div></div>
+    <div class="line"><div>Process</div><div id="processType">Transaction</div></div>
+    <div class="line"><div style="font-weight:800">Total</div><div id="totalAmount" style="font-weight:800">500 frw</div></div>
+
+    <div style="margin-top:14px;color:#6b6b8a">Payment Method</div>
+    <div class="pay-methods" id="payMethods">
+      <button class="pay-btn" data-method="agent">via agent</button>
+      <button class="pay-btn" data-method="visa">Visa card</button>
+      <button class="pay-btn" data-method="mastercard">Mastercard</button>
+      <button class="pay-btn" data-method="mobile_money">Mobile Money</button>
+    </div>
+
+    <button class="pay-now" id="payNow">Pay Now</button>
+
+  </div>
+</aside>
+
+</main>
+</div>
+
+
+<script>
+// CONFIG
+const PRICE_PER_HOUR = 200;
+
+// ELEMENTS
+const durButtons = document.querySelectorAll('.dur-btn');
+const amountText = document.getElementById('amountText');
+const pricePerHourText = document.getElementById('pricePerHour');
+const parkingForText = document.getElementById('parkingFor');
+const payAmount = document.getElementById('payAmount');
+const totalAmount = document.getElementById('totalAmount');
+const payNow = document.getElementById('payNow');
+const plateInput = document.getElementById('plate');
+const locationTag = document.getElementById('locationTag');
+
+// Default hours
+let selectedHours = 3;
+let selectedMethod = null;
+
+pricePerHourText.textContent = PRICE_PER_HOUR + " frw";
+
+function updateAmounts(){
+  const amount = PRICE_PER_HOUR * selectedHours;
+  amountText.textContent = amount + " frw";
+  payAmount.textContent = amount + " frw";
+  totalAmount.textContent = amount + " frw";
+  parkingForText.textContent = `Parking for: ${selectedHours}-${selectedHours}hrs`;
+}
+
+// Duration selection
+durButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    durButtons.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedHours = parseInt(btn.dataset.hours);
+    updateAmounts();
+  });
+});
+
+// Load saved plate
+const savedPlate = localStorage.getItem("plate");
+if(savedPlate) plateInput.value = savedPlate;
+
+// Save plate
+plateInput.addEventListener("change", ()=>{
+  localStorage.setItem("plate", plateInput.value);
+});
+
+// Dynamic location from previous page
+const selectedLocation = localStorage.getItem("selectedLocation") || "Kimironko";
+locationTag.textContent = "AT: " + selectedLocation;
+
+// Payment
+document.getElementById('payMethods').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-method]');
+  if(!btn) return;
+  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedMethod = btn.dataset.method;
+});
+
+payNow.addEventListener("click", ()=>{
+  if(!selectedMethod){
+    alert("Choose a payment method");
+    return;
+  }
+  if(plateInput.value.trim() === ""){
+    alert("Enter plate number");
+    return;
+  }
+
+  alert("Payment successful!");
+});
+
+updateAmounts();
+</script>
+
+</body>
+</html>
