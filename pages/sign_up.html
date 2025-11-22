@@ -425,7 +425,7 @@
                         <label>Login as:</label>
                         <div class="role-options">
                             <div class="role-option">
-                                <input type="radio" id="loginUser" name="loginRole" value="user" checked>
+                                <input type="radio" id="loginUser" name="loginRole" value="driver" checked>
                                 <label for="loginUser" class="role-card">
                                     <div class="role-icon">👤</div>
                                     <div class="role-title">User</div>
@@ -529,7 +529,7 @@
 
     <script>
         // API Configuration
-        const API_URL = 'http://localhost:3000/api';
+        const API_BASE_URL = 'http://127.0.0.1:5000';
 
         // Switch between login and signup
         function switchTab(tab) {
@@ -596,35 +596,38 @@
             btn.disabled = true;
             btn.classList.add('loading');
             
+            // Determine the endoint based on role
+            const endpoint = role === "driver" ? "/auth/driver/login" : "/auth/operator/login";
             try {
-                const response = await fetch(`${API_URL}/auth/login`, {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         email: email,
-                        password: password,
-                        role: role
+                        password: password
                     })
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok && data.success) {
-                    // Store token and user data
+                    // Access driver from backend
+                    const useer = role === "driver" ? data.driver : data.user;
+
+                    // store user's info
                     const storage = rememberMe ? localStorage : sessionStorage;
-                    storage.setItem('authToken', data.data.token);
-                    storage.setItem('userData', JSON.stringify(data.data.user));
+                    if (user) storage.setItem('userData', JSON.stringify(user));
                     
-                    showMessage(`Welcome back, ${data.data.user.name}!`, 'success');
+                    showMessage(`Welcome back, ${user.username || user.name}!`, 'success');
                     
                     // Redirect based on role
                     setTimeout(() => {
-                        if (data.data.user.role === 'admin') {
-                            window.location.href = 'admin-dashboard.html';
-                        } else {
+                        if (role === 'driver') {
                             window.location.href = 'user-dashboard.html';
+                        } else {
+                            window.location.href = 'admin-dashboard.html';
                         }
                     }, 1500);
                 } else {
@@ -639,6 +642,7 @@
                 btn.classList.remove('loading');
             }
         }
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
         // Handle Signup
         async function handleSignup(event) {

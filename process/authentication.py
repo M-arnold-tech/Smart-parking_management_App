@@ -54,11 +54,11 @@ def login_driver(data):
     """
     It will work in login of drivers using the username and password.
     """
-    username = data.get("username")
+    email = data.get("email")
     password = data.get("password")
 
-    if not username or not password:
-        return {"success": False, "message": "Username and password are required!"}
+    if not email or not password:
+        return {"success": False, "message": "Email and password are required!"}
     
     conn = get_connection()
     if not conn:
@@ -66,7 +66,7 @@ def login_driver(data):
     cursor = conn.cursor(dictionary=True)
 
     # Find driver
-    cursor.execute("SELECT * FROM driver WHERE username=%s", (username,))
+    cursor.execute("SELECT * FROM driver WHERE email=%s", (email,))
     driver = cursor.fetchone()
 
     cursor.close()
