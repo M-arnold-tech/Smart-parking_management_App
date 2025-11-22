@@ -156,6 +156,8 @@ body { font-family:'Inter', sans-serif; background:#1a1f71; min-height:100vh; di
 </div>
 
 <script>
+
+const API_BASE_URL = 'http://127.0.0.1:5000';
 // Switch tabs
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -170,16 +172,58 @@ function switchTab(tab) {
 }
 
 // Handle login
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
+
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
   const role = document.querySelector('input[name="loginRole"]:checked').value;
-  // Redirect immediately based on role
-  if(role === 'admin') {
-    window.location.href = '/pages/Admin_dashboard2.html';
-  } else {
-    window.location.href = '/pages/User_dashboard.html';
+  
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.textContent = 'logging in...';
+
+  try {
+    // determine the correct endpoint
+    const endpoint = role === "driver" ? "/auth/driver/login" : "/auth/operator/login";
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+
+        const user = role === "driver" ? data.driver : data.operator;
+
+        sessionStorage.setItem('userData', JSON.stringify(user));
+
+        // redirect based on role
+        if(role === 'admin') {
+            window.location.href = '/pages/Admin_dashboard2.html';
+        } else {
+            window.location.href = '/pages/User_dashboard.html';
+        }
+    
+    } else {
+        alert(data.message || 'Login failed');
+    }
+
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Network error. Please check your connection.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Login';
   }
 }
+
+document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
 // Handle signup (redirect similar to login)
 function handleSignup(e) {
