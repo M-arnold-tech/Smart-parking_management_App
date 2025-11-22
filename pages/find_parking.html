@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Parking - Park smart, Save time</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -17,12 +18,16 @@
         }
 
         header {
-            background-color: white;
+            background-color: rgb(26, 37, 163);;
             padding: 20px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .logo-section {
@@ -47,6 +52,17 @@
             background-color: #1a1f71;
             border-radius: 2px;
         }
+        .notification_btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+
+        }
+        .notification_btn i {
+            margin-left: 8px;
+        }
 
         .logo {
             display: flex;
@@ -68,16 +84,13 @@
         }
 
         .logo-text h1 {
-            color: #1a1f71;
+            color: #ffffff;
             font-size: 24px;
             font-weight: 700;
             letter-spacing: 1px;
         }
 
-        .logo-text p {
-            color: #a0a4c1;
-            font-size: 14px;
-        }
+       
 
         nav ul {
             display: flex;
@@ -87,20 +100,20 @@
 
         nav a {
             text-decoration: none;
-            color: #1a1f71;
+            color: white;
             font-weight: 600;
             font-size: 16px;
             transition: color 0.3s;
         }
 
         nav a:hover {
-            color: #4c51bf;
+            color: #c0ef05;
         }
 
         .user-icon {
             width: 50px;
             height: 50px;
-            background-color: #1a1f71;
+            background-color: #c6c7dd;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -112,6 +125,12 @@
             content: "👤";
             font-size: 24px;
             color: white;
+        }
+        .notification-container {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+            font-size: 28px;
         }
 
         main {
@@ -130,7 +149,8 @@
         }
 
         .search-section {
-            background: linear-gradient(135deg, #9ca3c7 0%, #b5bace 100%);
+            background: rgba(217, 219, 234, 0.242);;
+            box-shadow: rgb(26, 37, 163) 0px 0px 5px;
             border-radius: 20px;
             padding: 50px;
             margin-bottom: 60px;
@@ -211,7 +231,8 @@
         }
 
         .location-card {
-            background: linear-gradient(135deg, #c5cad9 0%, #d0d4e0 100%);
+            background: rgba(218, 219, 232, 0.242);;
+            box-shadow: rgb(26, 37, 163) 0px 0px 5px;
             border-radius: 16px;
             padding: 20px;
             position: relative;
@@ -410,29 +431,28 @@
 </head>
 <body>
     <header>
-        <div class="logo-section">
-            <div class="menu-icon">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+        <div class="logo-section"> 
             <div class="logo">
                 <div class="logo-icon">P</div>
                 <div class="logo-text">
                     <h1>SMART PARKING</h1>
-                    <p>Park smart, Save time</p>
+                    
                 </div>
             </div>
         </div>
         <nav>
             <ul>
-                <li><a href="/pages/landing_page.html">Home</a></li>
-                <li><a href="../pages/browse-parking.html">Browse Parking</a></li>
-                <li><a href="/pages/active-booking.html">Active booking</a></li>
-                <!-- <li><a href="#about">About us</a></li>
-                <li><a href="#help">Help</a></li> -->
+                <li><a href="/pages/find_parking.html" class="active">Home</a></li>
+                <li><a href="/pages/booking_page.html">Booking</a></li>
+                <li><a href="/pages/User_dashboard.html">Dashboard</a></li>
+                <li><a href="/pages/help_page.html">Help</a></li>
+                <a class="notification_btn" href="notification.html">Notification<i class="fas fa-bell"></i></a>
             </ul>
         </nav>
+        <div class="notification-container">
+       
+        <span class="notification-badge"></span>
+    </div>
         <div class="user-icon"></div>
     </header>
 
@@ -481,7 +501,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">87 reviews</div>
                     </div>
-                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
+                    <button class="book-now-btn" onclick="window.location.href='booking_page.html'">Book Now</button>
                 </div>
 
                 <div class="location-card" data-location="downtown">
@@ -506,7 +526,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">128 reviews</div>
                     </div>
-                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
+                    <button class="book-now-btn" onclick="window.location.href='booking_page.html'">Book Now</button>
                 </div>
 
                 <div class="location-card" data-location="kimironko">
@@ -531,7 +551,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">48 reviews</div>
                     </div>
-                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
+                    <button class="book-now-btn" onclick="window.location.href='booking_page.html'">Book Now</button>
                 </div>
 
                 <div class="location-card" data-location="chic">
@@ -556,7 +576,7 @@
                         <div class="stars">★ ★ ★ ★</div>
                         <div class="reviews">128 reviews</div>
                     </div>
-                    <button class="book-now-btn" href="../pages/my-booking.html">Book Now</button>
+                    <button class="book-now-btn" onclick="window.location.href='booking_page.html'">Book Now</button>
                 </div>
             </div>
         </div>
@@ -623,6 +643,10 @@
             });
         }
 
+        function location() {
+            window.location.href = '/pages/notification.html';
+        }
+
         // Set default date to today
         const dateInput = document.getElementById('date-input');
         const today = new Date().toISOString().split('T')[0];
@@ -656,7 +680,7 @@
             button.addEventListener('click', function() {
                 const bookingPage = this.getAttribute('href');
                 if (bookingPage) {
-                    window.location.href = bookingPage;
+                    window.location.href = "booking_page.html";
                 }
             });
         });
@@ -666,6 +690,5 @@
             alert('Mobile menu would open here');
         });
     </script>
-    <script src="../assets/js/script.js"></script>
 </body>
 </html>
