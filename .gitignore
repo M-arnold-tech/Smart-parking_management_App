@@ -1,0 +1,21 @@
+<<<<<<< HEAD
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment
+.env
+
+# Editor
+.vscode/
+
+# OS
+Thumbs.db
+desktop.ini
+=======
+__pycache__
+.vscode
+process/__pycache__
+>>>>>>> ab08eea56d971a03216f92fff0b18ef47329d23f
