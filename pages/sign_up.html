@@ -114,11 +114,11 @@ body { font-family:'Inter', sans-serif; background:#1a1f71; min-height:100vh; di
           <label>Register as:</label>
           <div class="role-options">
             <div class="role-option">
-              <input type="radio" id="signupUser" name="signupRole" value="user" checked>
+              <input type="radio" id="signupUser" name="signupRole" value="driver" checked>
               <label for="signupUser" class="role-card"><div class="role-icon">👤</div><div class="role-title">User</div></label>
             </div>
             <div class="role-option">
-              <input type="radio" id="signupAdmin" name="signupRole" value="admin">
+              <input type="radio" id="signupAdmin" name="signupRole" value="operator">
               <label for="signupAdmin" class="role-card"><div class="role-icon">🏢</div><div class="role-title">Parking Owner</div></label>
             </div>
           </div>
@@ -142,6 +142,16 @@ body { font-family:'Inter', sans-serif; background:#1a1f71; min-height:100vh; di
         <div class="input-group">
           <label>Confirm Password</label>
           <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+        </div>
+
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input type="tel" id="signupPhone" placeholder="+250780000000" required>
+        </div>
+
+        <div class="input-group driver-only" id="vehiclePlateGroup" style="display: none;">
+          <label>Vehicle Plate Number</label>
+          <input type="text" id="signupPlate" placeholder="RAD 123A">
         </div>
 
         <div class="checkbox-group">
@@ -241,7 +251,11 @@ async function handleSignup(e) {
   const password = document.getElementById('signupPassword').value;
   const phone = document.getElementById('signupPhone').value;
   const role = document.querySelector('input[name="signupRole"]:checked').value;
-  const vehiclePlate = document.getElementById('signupPlate').value;
+  
+  let vehiclePlate = "";
+  if (role === "driver") {
+    vehiclePlate = document.getElementById('signupPlate').value;
+  }
 
   const payload = role === "driver"
     ? {
@@ -266,9 +280,6 @@ async function handleSignup(e) {
     // Determine endpoint
     const endpoint = role === "driver" ? "/auth/driver/signup" : "/auth/operator/signup";
 
-    // Build payload
-    const payload = role === "driver" ? { username: name, email, password, phone_number: phone } : { operator_name: name, email, password, phone_number:phone};
-
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
       headers: {
@@ -279,32 +290,22 @@ async function handleSignup(e) {
 
     const data = await response.json();
 
-    if (response.ok && data.success) {
-      // successful signup
-      alert(data.message || 'Signup successful!');
-
-      // store user's info
-      const user = role === "driver" ? data.driver : data.operator;
-      sessionStorage.setItem('userData', JSON.stringify(user));
-
-      if(role === 'driver') {
-        localStorage.setItem('driver_id', user.id);
-      }
-
-      // Redirect based on role
-      if (role === 'driver'){
-        window.location.href = '/pages/User_dashboard.html';
+    if (data.success) {
+      alert("Signup successful!");
+    
+      if (role === "driver") {
+        localStorage.setItem("driver_id", data.driver.driver_id);
+        window.location.href = "/pages/User_dashboard.html";
       } else {
-        window.location.href = '/pages/Admin_dashboard2.html';
+        window.location.href = "/pages/Admin_dashboard2.html";
       }
-
-    } else {
-      alert(data.message || 'Signup failed');
+    } else{
+      alert(data.message || "Signup failed");
     }
 
-  } catch (error) {
-      console.error('Signup error:', error);
-      alert('Network error. Pleasse check your connection.');
+  } catch (err) {
+      console.error(err);
+      alert('Network error');
   } finally {
     btn.disabled = false;
     btn.textContent = 'Sign Up';
@@ -312,6 +313,14 @@ async function handleSignup(e) {
 }
 document.getElementById('loginForm').addEventListener('submit', handleLogin);
 document.getElementById('signupForm').addEventListener('submit', handleSignup);
+document.querySelectorAll('input[name="signupRole"]').forEach(r => {
+  r.addEventListener('change', function () {
+    document.getElementById("vehiclePlateGroup").style.display =
+      this.value === "driver" ? "block" : "none";
+  });
+});
+const checkedRole = document.querySelector('input[name="signupRole"]: checked');
+if (checkedRole) checkedRole.dispatchEvent(new Event('change'));
 </script>
 </body>
 </html>

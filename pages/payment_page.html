@@ -857,6 +857,26 @@
                 payBtn.disabled = false;
                 payBtn.textContent = "Pay";
 
+                const bookingInfo = JSON.parse(localStorage.getItem("currentBooking") || "{}");
+
+                const bookingRecord = {
+                    code: `RES-${res_id}`,
+                    date: bookingInfo.start_time || "-",
+                    time: bookingInfo.end_time || "-",
+                    location: bookingInfo.location || "Airport Parking",
+                    total: bookingInfo.total_price || 585,
+                    paymentStatus: "completed"
+                };
+
+                let bookingsList = JSON.parse(localStorage.getItem("parkingBookings") || "[]");
+                bookingsList.push(bookingRecord);
+                localStorage.setItem("parkingBookings", JSON.stringify(bookingsList));
+
+                console.log("Booking saved:", bookingRecord);
+
+                payBtn.disabled = false;
+                payBtn.textContent = "Pay";
+
             } catch (error) {
                 console.error("Payment error:", error);
                 alert("Network error during payment process");
@@ -864,7 +884,7 @@
                 payBtn.textContent = "Pay";
             }
         }
-        
+
         function downloadReceipt() {
             const code = document.getElementById('bookingCode').textContent;
             alert(`Receipt for booking ${code} will be downloaded.\n\nIn a real application, this would generate and download a PDF receipt.`);

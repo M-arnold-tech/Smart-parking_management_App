@@ -648,6 +648,8 @@
     </div>
 
     <script>
+
+        const API_BASE_URL = 'http://127.0.0.1:5000';
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
@@ -668,20 +670,38 @@
             document.getElementById('currentDate').textContent = `Today is ${today}`;
         }
 
-        function loadBookings() {
-            const bookings = JSON.parse(localStorage.getItem('parkingBookings') || '[]');
-            
-            // Update stats
-            document.getElementById('totalBookings').textContent = bookings.length;
-            
-            const totalSpent = bookings.reduce((sum, b) => sum + (b.total || 0), 0);
-            document.getElementById('totalSpent').textContent = totalSpent.toLocaleString();
-            
-            const activeBookings = bookings.filter(b => isActiveBooking(b));
-            document.getElementById('activeBookings').textContent = activeBookings.length;
-            
-            // Display bookings
-            displayBookings(bookings);
+        async function loadBookings() {
+            const driverId = localStorage.getItem("driver_id");
+
+            if (!driverId) {
+                console.error("Driver not found!");
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/reservation/driver/${driverId}`);
+                const data = await response.json();
+
+                console.log("API RESPONSE:", data);
+
+                if (!data.success) {
+                    console.error(data.message);
+                    return;
+                }
+
+                const bookings = data.reservations;
+
+                document.getElementById("totalBookings").textContent = bookings.length;
+                document.getElementById('activeBookings').textContent =
+                    bookings.filter(b => b.status === "confirmed").length;
+                
+                const totalSpent = bookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
+                document.getElementById("totalSpent").textContent = totalspent.toLocaleString();
+
+                displayBookings(bookings);
+            } catch (error) {
+                console.error("Error loading bookings:", error);
+            }
         }
 
         function isActiveBooking(booking) {
@@ -692,7 +712,7 @@
         function displayBookings(bookings) {
             const container = document.getElementById('bookingsList');
             
-            if (bookings.length === 0) {
+            if (!bookings || bookings.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📭</div>
@@ -702,27 +722,33 @@
                 return;
             }
 
-            container.innerHTML = bookings.slice(0, 5).map((booking, index) => `
+            container.innerHTML = bookings.slice(0, 5).map(b => `
                 <div class="booking-card">
                     <div class="booking-header">
                         <div>
-                            <div class="booking-location">${booking.location}</div>
-                            <div class="booking-code">Code: ${booking.code}</div>
+                            <div class="booking-location">${booking.location || "Parking Spot"}</div>
+                            <div class="booking-code">Reservation #${b.res_id}</div>
                         </div>
-                        <span class="booking-status status-active">Active</span>
+                        <span class="booking-status ${
+                            b.status === "confirmed" ? "status-active"
+                            : b.status === "pending" ? "status-upcoming"
+                            : b.status === "completed" ? "status-completed"
+                            : "status-cancelled"
+                        }">${b.status.toUpperCase()}</span>
                     </div>
+
                     <div class="booking-details">
                         <div class="detail-item">
-                            <div class="detail-label">Date</div>
-                            <div class="detail-value">${booking.date}</div>
+                            <div class="detail-label">Start</div>
+                            <div class="detail-value">${b.start_time}</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">Time</div>
-                            <div class="detail-value">${booking.time}</div>
+                            <div class="detail-label">End</div>
+                            <div class="detail-value">${b.end_time}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">Amount</div>
-                            <div class="detail-value">${booking.total} RWF</div>
+                            <div class="detail-value">${b.total_price} RWF</div>
                         </div>
                     </div>
                 </div>
@@ -761,7 +787,7 @@
             if (confirm('Are you sure you want to logout?')) {
                 alert('Logging out...');
                 localStorage.removeItem('userSession');
-                window.location.href = '/pages/login.html';
+                window.location.href = '/pages/sign_up.html';
             }
         }
     </script>
