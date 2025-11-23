@@ -24,7 +24,7 @@ def book_reservation():
 
   # Live status update
   if result.get("success"):
-    result["res_id"] = result.get("res_id") or result.get("reservation").res_id
+    result["res_id"] = result.get("reservation_id")
     result["status_update"] = {
       "reservation_status": "pending",
       "payment_status": "pending"

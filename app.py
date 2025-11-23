@@ -6,7 +6,8 @@ from api.parking_api import parking_bp
 from api.reservation_api import reservation_bp
 from api.payment_api import payment_bp
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, resources={r"/*" : {"origins": "*"}}, supports_credentials=True)
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix="/auth")

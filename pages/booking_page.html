@@ -898,7 +898,7 @@
     // Build booking payload
     const bookingPayload = {
         driver_id: parseInt(driverId),
-        parking_spot_id: 1, // you can dynamically choose the spot later
+        spot_id: 1, // you can dynamically choose the spot later
         start_time: startTime.toISOString().slice(0, 19).replace("T", " "),
         end_time: endTime.toISOString().slice(0, 19).replace("T", " "),
         total_price: totalPrice
@@ -920,7 +920,7 @@
         }
 
         // Save reservation ID for payment
-        localStorage.setItem("current_reservation_id", response.data.res_id);
+        localStorage.setItem("current_reservation_id", response.data.reservation_id);
 
         // Save full booking info for payment page
         const bookingInfo = {
