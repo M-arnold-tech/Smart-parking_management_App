@@ -730,6 +730,8 @@
     </div>
 
     <script>
+
+        const API_BASE_URL = "http://127.0.0.1:5000";
         let selectedMethod = null;
 
         function selectPaymentMethod(method) {
@@ -766,46 +768,103 @@
             payBtn.textContent = buttonText[method];
         }
 
-        function processPayment() {
+        async function processPayment() {
             if (!selectedMethod) {
-                alert('Please select a payment method');
+                alert("Please select a payment method");
+                return;
+            }
+            const payBtn = document.getElementById("payButton");
+            payBtn.disabled = true;
+            payBtn.textContent = "Processing...";
+
+            // Load reservation ID
+            const res_id = localStorage.getItem("current_reservation_id");
+
+            if (!res_id) {
+                alert("Missing reservation ID.");
+                payBtn.disabled = false;
+                payBtn.textContent = "Pay";
                 return;
             }
 
-            // Show processing animation
-            const payBtn = document.getElementById('payButton');
-            payBtn.disabled = true;
-            payBtn.textContent = 'Processing...';
+            // payment method
+            const methodMap = {
+                "momo": "mobile_money",
+                "airtel": "mobile_money",
+                "card": "card",
+                "cash": "cash"
+            };
+            const backendMethod = methodMap[selectedMethod];
 
-            // Simulate payment processing
-            setTimeout(() => {
-                // Generate random booking code
-                const bookingCode = 'SP-' + Math.floor(10000 + Math.random() * 90000);
-                document.getElementById('bookingCode').textContent = bookingCode;
+            // INITIATE PAYMENT
+            let payment_id;
 
-                // Show success modal
-                document.getElementById('successModal').classList.add('show');
+            try{
+                // Payment initiate
+                const initRes =await fetch(`${API_BASE_URL}/payment/initiate`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        res_id: res_id,
+                        amount: 585,
+                        payment_method: backendMethod
+                    })
+                });
+                const initData = await initRes.json();
 
-                // Store booking in localStorage
-                const booking = {
-                    code: bookingCode,
-                    location: 'Airport Parking',
-                    date: 'Nov 25, 2025',
-                    time: '10:00 AM',
-                    duration: '4 Hours',
-                    vehicle: 'RAD 123A',
-                    amount: '585 RWF',
-                    paymentMethod: selectedMethod,
+                if (!initData.success) {
+                    alert(initData.message || "Payment initiation failed");
+                    payBtn.disabled = false;
+                    payBtn.textContent = "Pay";
+                    return;
+                }
+
+                payment_id = initData.payment_id;
+                localStorage.setItem("payment_id", payment_id);
+
+                // Payment confirmation
+                const confirmRes = await fetch(`${API_BASE_URL}/payment/confirm`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        payment_id: payment_id,
+                        success:true
+                    })
+                });
+                const confirmData = await confirmRes.json();
+
+                if (!confirmData.success) {
+                    alert(confirmData.message || "Paymnt confirmation failed");
+                    payBtn.disabled = false;
+                    payBtn.textContent = "Try again";
+                    return;
+                }
+
+                document.getElementById("bookingCode").textContent = `RES-${res_id}-PAY-${payment_id}`;
+                document.getElementById("successModal").classList.add("show");
+
+                const record = {
+                    reservation_id: res_id,
+                    payment_id: payment_id,
+                    amount: 585,
+                    method: selectedMethod,
                     timestamp: new Date().toISOString()
                 };
-                
-                let bookings = JSON.parse(localStorage.getItem('parkingBookings') || '[]');
-                bookings.push(booking);
-                localStorage.setItem('parkingBookings', JSON.stringify(bookings));
+                let payments = JSON.parse(localStorage.getItem("userPayments") || "[]");
+                payments.push(record);
+                localStorage.setItem("userPayments", JSON.stringify(payments));
 
-            }, 2000);
+                payBtn.disabled = false;
+                payBtn.textContent = "Pay";
+
+            } catch (error) {
+                console.error("Payment error:", error);
+                alert("Network error during payment process");
+                payBtn.disabled = false;
+                payBtn.textContent = "Pay";
+            }
         }
-
+        
         function downloadReceipt() {
             const code = document.getElementById('bookingCode').textContent;
             alert(`Receipt for booking ${code} will be downloaded.\n\nIn a real application, this would generate and download a PDF receipt.`);

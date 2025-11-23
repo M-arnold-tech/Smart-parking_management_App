@@ -731,7 +731,12 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
+        
+        const API_BASE_URL = "http://127.0.0.1:5000";
+
         // Set minimum date to today
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
@@ -861,33 +866,84 @@
             }
         }
 
-        function proceedToPayment() {
-            
-            // Gather booking data
-            const bookingData = {
-                location: 'Airport Parking',
-                locationAddress: 'Kigali International Airport',
-                date: document.getElementById('parkingDate').value,
-                time: document.getElementById('arrivalTime').value,
-                duration: selectedDurationHours,
-                vehiclePlate: document.getElementById('vehiclePlate').value,
-                vehicleType: document.getElementById('vehicleType').value,
-                vehicleColor: document.getElementById('vehicleColor').value,
-                fullName: document.getElementById('fullName').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                email: document.getElementById('email').value,
-                parkingFee: selectedDurationHours * HOURLY_RATE,
-                serviceFee: 50,
-                total: (selectedDurationHours * HOURLY_RATE) + 50
-            };
+        async function proceedToPayment() {
+    // Check driver_id
+    const driverId = localStorage.getItem("driver_id");
+    if (!driverId) {
+        alert("You are not logged in or driver ID is missing!");
+        return;
+    }
 
-            // Store in localStorage
-            localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+    // Check duration
+    if (selectedDurationHours <= 0) {
+        alert("Please select a valid duration.");
+        return;
+    }
 
-            // Redirect to payment page
-            alert('Redirecting to payment page...\n\nYour booking details have been saved.');
-            window.location.href = '/pages/payment_page.html';
+    // Parse date and time
+    const date = document.getElementById("parkingDate").value;
+    const time = document.getElementById("arrivalTime").value;
+
+    if (!date || !time) {
+        alert("Please select a valid date and time.");
+        return;
+    }
+
+    const startTimeStr = `${date} ${time}:00`;
+    const startTime = new Date(startTimeStr);
+    const endTime = new Date(startTime.getTime() + selectedDurationHours * 60 * 60 * 1000);
+
+    const totalPrice = selectedDurationHours * HOURLY_RATE + 50;
+
+    // Build booking payload
+    const bookingPayload = {
+        driver_id: parseInt(driverId),
+        parking_spot_id: 1, // you can dynamically choose the spot later
+        start_time: startTime.toISOString().slice(0, 19).replace("T", " "),
+        end_time: endTime.toISOString().slice(0, 19).replace("T", " "),
+        total_price: totalPrice
+    };
+
+    console.log("Booking payload:", bookingPayload); // for debugging
+
+    try {
+        // POST request with proper JSON header
+        const response = await axios.post(
+            `${API_BASE_URL}/reservation/book`,
+            bookingPayload,
+            { headers: { "Content-Type": "application/json" } }
+        );
+
+        if (!response.data.success) {
+            alert(response.data.message || "Reservation failed");
+            return;
         }
+
+        // Save reservation ID for payment
+        localStorage.setItem("current_reservation_id", response.data.res_id);
+
+        // Save full booking info for payment page
+        const bookingInfo = {
+            ...bookingPayload,
+            vehiclePlate: document.getElementById("vehiclePlate").value,
+            vehicleType: document.getElementById("vehicleType").value,
+            vehicleColor: document.getElementById("vehicleColor").value,
+            fullName: document.getElementById("fullName").value,
+            phoneNumber: document.getElementById("phoneNumber").value,
+            email: document.getElementById("email").value
+        };
+        localStorage.setItem("currentBooking", JSON.stringify(bookingInfo));
+
+        alert("Reservation created! Redirecting to payment page...");
+        window.location.href = "/pages/payment_page.html";
+
+    } catch (error) {
+        console.error("Reservation error:", error.response || error);
+        const msg = error.response?.data?.message || "Failed to create reservation. Please check your connection.";
+        alert(msg);
+    }
+}
+
 
         function goBack() {
             if (confirm('Are you sure you want to go back? Your booking information will not be saved.')) {

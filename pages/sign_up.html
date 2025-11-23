@@ -202,6 +202,12 @@ async function handleLogin(e) {
         const user = role === "driver" ? data.driver : data.operator;
 
         sessionStorage.setItem('userData', JSON.stringify(user));
+        
+        if(role === "driver") {
+          const driverId = user.id || user.driver_id;
+          localStorage.setItem('driver_id', driverId);
+          console.log("stored driver_id:", localStorage.getItem('driver_id'));
+        }
 
         // redirect based on role
         if(role === 'admin') {
@@ -226,15 +232,86 @@ async function handleLogin(e) {
 document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
 // Handle signup (redirect similar to login)
-function handleSignup(e) {
+async function handleSignup(e) {
   e.preventDefault();
+
+  // Form values
+  const name = document.getElementById('signupName').value;
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+  const phone = document.getElementById('signupPhone').value;
   const role = document.querySelector('input[name="signupRole"]:checked').value;
-  if(role === 'admin') {
-    window.location.href = '/pages/Admin_dashboard2.html';
-  } else {
-    window.location.href = '/pages/User_dashboard.html';
+  const vehiclePlate = document.getElementById('signupPlate').value;
+
+  const payload = role === "driver"
+    ? {
+        username: name,
+        email,
+        password,
+        phone_number: phone,
+        vehicle_plate: vehiclePlate
+      }
+    : {
+        operator_name: name,
+        email,
+        password,
+        phone_number: phone
+      };
+
+  const btn = document.getElementById('signupBtn');
+  btn.disabled = true;
+  btn.textContent = 'Signing up...';
+
+  try{
+    // Determine endpoint
+    const endpoint = role === "driver" ? "/auth/driver/signup" : "/auth/operator/signup";
+
+    // Build payload
+    const payload = role === "driver" ? { username: name, email, password, phone_number: phone } : { operator_name: name, email, password, phone_number:phone};
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      // successful signup
+      alert(data.message || 'Signup successful!');
+
+      // store user's info
+      const user = role === "driver" ? data.driver : data.operator;
+      sessionStorage.setItem('userData', JSON.stringify(user));
+
+      if(role === 'driver') {
+        localStorage.setItem('driver_id', user.id);
+      }
+
+      // Redirect based on role
+      if (role === 'driver'){
+        window.location.href = '/pages/User_dashboard.html';
+      } else {
+        window.location.href = '/pages/Admin_dashboard2.html';
+      }
+
+    } else {
+      alert(data.message || 'Signup failed');
+    }
+
+  } catch (error) {
+      console.error('Signup error:', error);
+      alert('Network error. Pleasse check your connection.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign Up';
   }
 }
+document.getElementById('loginForm').addEventListener('submit', handleLogin);
+document.getElementById('signupForm').addEventListener('submit', handleSignup);
 </script>
 </body>
 </html>
