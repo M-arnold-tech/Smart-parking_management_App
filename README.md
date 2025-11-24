@@ -1,6 +1,7 @@
 # Smart Parking Management System
 
 A full-stack web application for managing parking spaces, reservations, and payments. The system supports two types of users: **Drivers** (who book parking spots) and **Parking Operators** (who manage parking spots).
+#### [Live Deployment](https://smart-space-system.netlify.app/)
 
 ## Project Overview
 
