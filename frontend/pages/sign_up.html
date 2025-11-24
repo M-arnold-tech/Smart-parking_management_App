@@ -211,11 +211,11 @@ async function handleLogin(e) {
         const user = role === "driver" ? data.driver : data.operator;
 
         sessionStorage.setItem('userData', JSON.stringify(user));
+        localStorage.setItem('userProfile', JSON.stringify(user));
         
         if(role === "driver") {
-          const driverId = user.id || user.driver_id;
+          const driverId = user.driver_id || user.id;
           localStorage.setItem('driver_id', driverId);
-          console.log("stored driver_id:", localStorage.getItem('driver_id'));
         }
 
         // redirect based on role
@@ -293,9 +293,16 @@ async function handleSignup(e) {
       alert("Signup successful!");
     
       if (role === "driver") {
-        localStorage.setItem("driver_id", data.driver.driver_id);
+        const driverId = data.driver?.driver_id;
+        if (driverId) {
+          localStorage.setItem("driver_id", driverId);
+          localStorage.setItem('userProfile', JSON.stringify(data.driver));
+        }
         window.location.href = "./User_dashboard.html";
       } else {
+        if (data.operator) {
+          localStorage.setItem('userProfile', JSON.stringify(data.operator));
+        }
         window.location.href = "./Admin_dashboard2.html";
       }
     } else{

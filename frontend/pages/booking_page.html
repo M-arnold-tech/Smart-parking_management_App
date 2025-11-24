@@ -735,8 +735,15 @@
     <script src="../assets/js/config.js"></script>
     <script>
 
+        // Global variables
+        let selectedDurationHours = 0;
+        let selectedSpotId = null;
+        let selectedSpot = null;
+        let availableSpots = [];
+        const HOURLY_RATE = 150; // RWF per hour
+
         // Set minimum date to today
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('parkingDate').min = today;
             
@@ -746,10 +753,79 @@
             document.getElementById('vehiclePlate').addEventListener('input', updateSummary);
             document.getElementById('fullName').addEventListener('input', validateForm);
             document.getElementById('phoneNumber').addEventListener('input', validateForm);
+            
+            // Load parking spots
+            await loadParkingSpots();
         });
 
-        let selectedDurationHours = 0;
-        const HOURLY_RATE = 150; // RWF per hour
+        // Load available parking spots from API
+        async function loadParkingSpots() {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/parking/available`);
+                
+                if (response.data.success && response.data.parking_spots && response.data.parking_spots.length > 0) {
+                    availableSpots = response.data.parking_spots;
+                    
+                    // Try to get spot_id from URL parameters
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const spotIdFromUrl = urlParams.get('spot_id');
+                    
+                    // Try to get from localStorage
+                    const spotIdFromStorage = localStorage.getItem('selectedSpotId');
+                    
+                    // Determine which spot to use
+                    let targetSpotId = null;
+                    if (spotIdFromUrl) {
+                        targetSpotId = parseInt(spotIdFromUrl);
+                    } else if (spotIdFromStorage) {
+                        targetSpotId = parseInt(spotIdFromStorage);
+                    }
+                    
+                    // Find the spot
+                    let spot = null;
+                    if (targetSpotId) {
+                        spot = availableSpots.find(s => s.spot_id === targetSpotId);
+                    }
+                    
+                    // If not found or no target, use first available spot
+                    if (!spot && availableSpots.length > 0) {
+                        spot = availableSpots[0];
+                    }
+                    
+                    if (spot) {
+                        selectedSpotId = spot.spot_id;
+                        selectedSpot = spot;
+                        updateLocationCard(spot);
+                    } else {
+                        alert('No available parking spots found. Please try again later.');
+                    }
+                } else {
+                    alert('No available parking spots found. Please try again later.');
+                }
+            } catch (error) {
+                console.error('Error loading parking spots:', error);
+                alert('Failed to load parking spots. Please refresh the page.');
+            }
+        }
+
+        // Update location card with selected spot
+        function updateLocationCard(spot) {
+            const locationCard = document.querySelector('.location-card');
+            if (locationCard && spot) {
+                const locationDetails = locationCard.querySelector('.location-details');
+                if (locationDetails) {
+                    const h3 = locationDetails.querySelector('h3');
+                    const p = locationDetails.querySelector('p');
+                    const availability = locationDetails.querySelector('.availability');
+                    
+                    if (h3) h3.textContent = spot.location || 'Parking Location';
+                    if (p) p.textContent = spot.location || 'Select a location';
+                    if (availability) {
+                        availability.textContent = `✓ ${spot.spot_number || 0} Spots Available`;
+                    }
+                }
+            }
+        }
 
         function selectDuration(hours) {
             if (hours === 'custom') {
@@ -815,7 +891,8 @@
             }
 
             // Update pricing
-            const parkingFee = selectedDurationHours * HOURLY_RATE;
+            const hourlyRate = selectedSpot ? (selectedSpot.price_per_hour || HOURLY_RATE) : HOURLY_RATE;
+            const parkingFee = selectedDurationHours * hourlyRate;
             const serviceFee = 50;
             const total = parkingFee + serviceFee;
 
@@ -891,12 +968,20 @@
     const startTime = new Date(startTimeStr);
     const endTime = new Date(startTime.getTime() + selectedDurationHours * 60 * 60 * 1000);
 
-    const totalPrice = selectedDurationHours * HOURLY_RATE + 50;
+    // Use actual price from selected spot
+    const hourlyRate = selectedSpot ? (selectedSpot.price_per_hour || HOURLY_RATE) : HOURLY_RATE;
+    const totalPrice = selectedDurationHours * hourlyRate + 50;
+
+    // Check if spot is selected
+    if (!selectedSpotId) {
+        alert("Please wait for parking spots to load, or refresh the page.");
+        return;
+    }
 
     // Build booking payload
     const bookingPayload = {
         driver_id: parseInt(driverId),
-        spot_id: 1, // you can dynamically choose the spot later
+        spot_id: selectedSpotId,
         start_time: startTime.toISOString().slice(0, 19).replace("T", " "),
         end_time: endTime.toISOString().slice(0, 19).replace("T", " "),
         total_price: totalPrice

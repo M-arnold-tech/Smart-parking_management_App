@@ -778,6 +778,7 @@
 
             // Load reservation ID
             const res_id = localStorage.getItem("current_reservation_id");
+            const bookingInfo = JSON.parse(localStorage.getItem("currentBooking") || "{}");
 
             if (!res_id) {
                 alert("Missing reservation ID.");
@@ -786,7 +787,14 @@
                 return;
             }
 
-            // payment method
+            const amount = parseFloat(bookingInfo.total_price) || 0;
+            if (amount <= 0) {
+                alert("Invalid amount. Please go back and complete your booking.");
+                payBtn.disabled = false;
+                payBtn.textContent = "Pay";
+                return;
+            }
+
             const methodMap = {
                 "momo": "mobile_money",
                 "airtel": "mobile_money",
@@ -795,17 +803,15 @@
             };
             const backendMethod = methodMap[selectedMethod];
 
-            // INITIATE PAYMENT
             let payment_id;
 
             try{
-                // Payment initiate
-                const initRes =await fetch(`${API_BASE_URL}/payment/initiate`, {
+                const initRes = await fetch(`${API_BASE_URL}/payment/initiate`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json"},
                     body: JSON.stringify({
-                        res_id: res_id,
-                        amount: 585,
+                        res_id: parseInt(res_id),
+                        amount: amount,
                         payment_method: backendMethod
                     })
                 });
@@ -845,7 +851,7 @@
                 const record = {
                     reservation_id: res_id,
                     payment_id: payment_id,
-                    amount: 585,
+                    amount: amount,
                     method: selectedMethod,
                     timestamp: new Date().toISOString()
                 };
@@ -856,14 +862,12 @@
                 payBtn.disabled = false;
                 payBtn.textContent = "Pay";
 
-                const bookingInfo = JSON.parse(localStorage.getItem("currentBooking") || "{}");
-
                 const bookingRecord = {
                     code: `RES-${res_id}`,
                     date: bookingInfo.start_time || "-",
                     time: bookingInfo.end_time || "-",
-                    location: bookingInfo.location || "Airport Parking",
-                    total: bookingInfo.total_price || 585,
+                    location: bookingInfo.location || "Parking Location",
+                    total: amount,
                     paymentStatus: "completed"
                 };
 

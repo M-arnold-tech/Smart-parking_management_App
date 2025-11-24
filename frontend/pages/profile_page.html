@@ -761,6 +761,7 @@
         </div>
     </div>
 
+    <script src="../assets/js/config.js"></script>
     <script>
         // Load user data on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -768,14 +769,58 @@
             loadUserStats();
         });
 
-        function loadUserProfile() {
-            // In real app, fetch from server/localStorage
-            const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+        async function loadUserProfile() {
+            const driverId = localStorage.getItem("driver_id");
+            if (!driverId) {
+                const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                if (userData.username) {
+                    document.getElementById('firstName').value = userData.username.split(' ')[0] || '';
+                    document.getElementById('lastName').value = userData.username.split(' ').slice(1).join(' ') || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('phone').value = userData.phone_number || '';
+                    document.getElementById('displayName').textContent = userData.username || 'User';
+                    document.getElementById('displayEmail').textContent = userData.email || '';
+                }
+                return;
+            }
             
-            if (userData.firstName) {
-                document.getElementById('firstName').value = userData.firstName;
-                document.getElementById('lastName').value = userData.lastName;
-                document.getElementById('displayName').textContent = `${userData.firstName} ${userData.lastName}`;
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/driver/profile/${driverId}`);
+                const data = await response.json();
+                
+                if (data.success && data.driver) {
+                    const driver = data.driver;
+                    const nameParts = (driver.username || '').split(' ');
+                    document.getElementById('firstName').value = nameParts[0] || '';
+                    document.getElementById('lastName').value = nameParts.slice(1).join(' ') || '';
+                    document.getElementById('email').value = driver.email || '';
+                    document.getElementById('phone').value = driver.phone_number || '';
+                    document.getElementById('displayName').textContent = driver.username || 'User';
+                    document.getElementById('displayEmail').textContent = driver.email || '';
+                    
+                    if (driver.vehicle_plate) {
+                        const vehiclesList = document.getElementById('vehiclesList');
+                        if (vehiclesList && vehiclesList.children.length === 0) {
+                            vehiclesList.innerHTML = `
+                                <div class="vehicle-item">
+                                    <div class="vehicle-icon">🚗</div>
+                                    <div class="vehicle-details">
+                                        <div class="vehicle-plate">${driver.vehicle_plate.toUpperCase()}</div>
+                                        <div class="vehicle-type">Vehicle</div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    localStorage.setItem('userProfile', JSON.stringify(driver));
+                }
+            } catch (error) {
+                console.error("Error loading profile:", error);
+                const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                if (userData.username) {
+                    document.getElementById('displayName').textContent = userData.username;
+                }
             }
         }
 
@@ -813,25 +858,50 @@
             }
         }
 
-        function savePersonal() {
-            const userData = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                dob: document.getElementById('dob').value,
-                gender: document.getElementById('gender').value,
-                address: document.getElementById('address').value
-            };
+        async function savePersonal() {
+            const driverId = localStorage.getItem("driver_id");
+            if (!driverId) {
+                alert('You must be logged in to update your profile');
+                return;
+            }
             
-            localStorage.setItem('userProfile', JSON.stringify(userData));
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const username = `${firstName} ${lastName}`.trim();
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
             
-            // Update display name
-            document.getElementById('displayName').textContent = `${userData.firstName} ${userData.lastName}`;
-            document.getElementById('displayEmail').textContent = userData.email;
+            if (!username || !email) {
+                alert('Username and email are required');
+                return;
+            }
             
-            alert('✓ Profile updated successfully!');
-            toggleEdit('personal');
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/driver/profile/${driverId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        phone_number: phone
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('displayName').textContent = username;
+                    document.getElementById('displayEmail').textContent = email;
+                    localStorage.setItem('userProfile', JSON.stringify(data.driver));
+                    alert('✓ Profile updated successfully!');
+                    toggleEdit('personal');
+                } else {
+                    alert(data.message || 'Failed to update profile');
+                }
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert('Failed to update profile. Please try again.');
+            }
         }
 
         function addVehicle() {

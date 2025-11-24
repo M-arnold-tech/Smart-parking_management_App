@@ -1,7 +1,6 @@
-# Will handle the user authentication (SIGNUP And LOGIN).
-
 from flask import Blueprint, request, jsonify
 from process.authentication import signup_driver, login_driver, signup_operator, login_operator
+from process.user_profile import get_driver_profile, update_driver_profile
 
 auth_bp = Blueprint("auth_bp", __name__)
 
@@ -32,3 +31,14 @@ def operator_login():
   data = request.get_json()
   result = login_operator(data)
   return jsonify(result)
+
+@auth_bp.route("/driver/profile/<int:driver_id>", methods=["GET"])
+def get_driver_profile_route(driver_id):
+  result = get_driver_profile(driver_id)
+  return jsonify(result), 200 if result.get("success") else 404
+
+@auth_bp.route("/driver/profile/<int:driver_id>", methods=["PUT"])
+def update_driver_profile_route(driver_id):
+  data = request.get_json()
+  result = update_driver_profile(driver_id, data)
+  return jsonify(result), 200 if result.get("success") else 400

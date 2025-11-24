@@ -329,6 +329,36 @@
             border-color: #0a1442;
             box-shadow: 0 3px 10px rgba(102, 126, 234, 0.1);
         }
+        
+        .checkout-btn, .cancel-btn {
+            margin-top: 15px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .checkout-btn {
+            background: #1a1f71;
+            color: white;
+        }
+        
+        .checkout-btn:hover {
+            background: #2d42b9;
+        }
+        
+        .cancel-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background: #c0392b;
+        }
 
         .booking-header {
             display: flex;
@@ -656,10 +686,78 @@
             updateDate();
         });
 
-        function loadUserData() {
-            const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-            if (userProfile.firstName) {
-                document.getElementById('userName').textContent = userProfile.firstName;
+        async function loadUserData() {
+            const driverId = localStorage.getItem("driver_id");
+            if (!driverId) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/driver/profile/${driverId}`);
+                const data = await response.json();
+                
+                if (data.success && data.driver) {
+                    const driver = data.driver;
+                    document.getElementById('userName').textContent = driver.username || 'User';
+                    localStorage.setItem('userProfile', JSON.stringify(driver));
+                } else {
+                    const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                    if (userProfile.username) {
+                        document.getElementById('userName').textContent = userProfile.username;
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading user data:", error);
+                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                if (userProfile.username) {
+                    document.getElementById('userName').textContent = userProfile.username;
+                }
+            }
+        }
+        
+        async function cancelReservation(resId) {
+            if (!confirm('Are you sure you want to cancel this reservation?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/reservation/cancel`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ res_id: resId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Reservation cancelled successfully!');
+                    loadBookings();
+                } else {
+                    alert(data.message || 'Failed to cancel reservation');
+                }
+            } catch (error) {
+                console.error("Error cancelling reservation:", error);
+                alert('Failed to cancel reservation. Please try again.');
+            }
+        }
+        
+        async function checkoutReservation(resId) {
+            if (!confirm('Are you sure you want to checkout? This will end your parking session.')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/reservation/checkout`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ res_id: resId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Checkout completed successfully!');
+                    loadBookings();
+                } else {
+                    alert(data.message || 'Failed to checkout');
+                }
+            } catch (error) {
+                console.error("Error checking out:", error);
+                alert('Failed to checkout. Please try again.');
             }
         }
 
@@ -678,24 +776,22 @@
             }
 
             try {
-                const response = await fetch(`http://127.0.0.1:5000/reservation/driver/${driverId}`);
+                const response = await fetch(`${API_BASE_URL}/reservation/driver/${driverId}`);
                 const data = await response.json();
-
-                console.log("API RESPONSE:", data);
 
                 if (!data.success) {
                     console.error(data.message);
                     return;
                 }
 
-                const bookings = data.reservations;
+                const bookings = data.reservations || [];
 
                 document.getElementById("totalBookings").textContent = bookings.length;
                 document.getElementById('activeBookings').textContent =
-                    bookings.filter(b => b.status === "confirmed").length;
+                    bookings.filter(b => b.status === "confirmed" || b.status === "pending").length;
                 
-                const totalSpent = bookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
-                document.getElementById("totalSpent").textContent = totalspent.toLocaleString();
+                const totalSpent = bookings.reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0);
+                document.getElementById("totalSpent").textContent = totalSpent.toLocaleString();
 
                 displayBookings(bookings);
             } catch (error) {
@@ -725,7 +821,7 @@
                 <div class="booking-card">
                     <div class="booking-header">
                         <div>
-                            <div class="booking-location">${booking.location || "Parking Spot"}</div>
+                            <div class="booking-location">${b.location || "Parking Spot"}</div>
                             <div class="booking-code">Reservation #${b.res_id}</div>
                         </div>
                         <span class="booking-status ${
@@ -739,17 +835,19 @@
                     <div class="booking-details">
                         <div class="detail-item">
                             <div class="detail-label">Start</div>
-                            <div class="detail-value">${b.start_time}</div>
+                            <div class="detail-value">${new Date(b.start_time).toLocaleString()}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">End</div>
-                            <div class="detail-value">${b.end_time}</div>
+                            <div class="detail-value">${new Date(b.end_time).toLocaleString()}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">Amount</div>
-                            <div class="detail-value">${b.total_price} RWF</div>
+                            <div class="detail-value">${parseFloat(b.total_price || 0).toLocaleString()} RWF</div>
                         </div>
                     </div>
+                    ${b.status === "confirmed" ? `<button onclick="checkoutReservation(${b.res_id})" class="checkout-btn">Checkout</button>` : ''}
+                    ${b.status === "pending" ? `<button onclick="cancelReservation(${b.res_id})" class="cancel-btn">Cancel</button>` : ''}
                 </div>
             `).join('');
         }

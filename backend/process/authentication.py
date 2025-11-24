@@ -42,10 +42,14 @@ def signup_driver(data):
         VALUES (%s, %s, %s, %s, %s)
     """, (username, email, hashed_password, phone, vehicle_plate))
     conn.commit()
+    
+    driver_id = cursor.lastrowid
+    cursor.execute("SELECT driver_id, username, email, phone_number, vehicle_plate, created_at FROM driver WHERE driver_id = %s", (driver_id,))
+    new_driver = cursor.fetchone()
 
     cursor.close()
     conn.close()
-    return {"success": True, "message": "Driver registered successfully!"}
+    return {"success": True, "message": "Driver registered successfully!", "driver": new_driver}
 
 
 # === DRIVER LOGIN ===
@@ -113,10 +117,14 @@ def signup_operator(data):
         VALUES (%s, %s, %s, %s)
     """, (operator_name, email, hashed_password, phone))
     conn.commit()
+    
+    operator_id = cursor.lastrowid
+    cursor.execute("SELECT operator_id, operator_name, email, phone_number, created_at FROM parking_operator WHERE operator_id = %s", (operator_id,))
+    new_operator = cursor.fetchone()
 
     cursor.close()
     conn.close()
-    return{"success": True, "message": "Operator registered successfully!"}
+    return{"success": True, "message": "Operator registered successfully!", "operator": new_operator}
 
 # === OPERATOR LOGIN ===
 

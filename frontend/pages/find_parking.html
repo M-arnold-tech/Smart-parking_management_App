@@ -584,8 +584,58 @@
         </div>
     </main>
 
+    <script src="../assets/js/config.js"></script>
     <script>
-        // Image data for each location
+        let availableParkingSpots = [];
+        
+        async function loadParkingSpots() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/parking/available`);
+                const data = await response.json();
+                
+                if (data.success && data.parking_spots) {
+                    availableParkingSpots = data.parking_spots;
+                    displayParkingSpots(data.parking_spots);
+                }
+            } catch (error) {
+                console.error("Error loading parking spots:", error);
+            }
+        }
+        
+        function displayParkingSpots(spots) {
+            const grid = document.querySelector('.locations-grid');
+            if (!grid || spots.length === 0) return;
+            
+            grid.innerHTML = spots.map(spot => `
+                <div class="location-card" data-location="${spot.location.toLowerCase().replace(/\s+/g, '-')}">
+                    <div class="location-image">
+                        <img src="../images/Airport parking1.avif" alt="${spot.location}">
+                    </div>
+                    <div class="location-dots">...</div>
+                    <div class="location-info">
+                        <div class="location-name">${spot.location}</div>
+                        <div class="location-price">
+                            <div class="from">${parseFloat(spot.price_per_hour).toLocaleString()} RWF/hr</div>
+                        </div>
+                    </div>
+                    <div class="rating">
+                        <div class="stars">★ ★ ★ ★</div>
+                        <div class="reviews">${spot.spot_number} spots available</div>
+                    </div>
+                    <button class="book-now-btn" onclick="bookSpot(${spot.spot_id})">Book Now</button>
+                </div>
+            `).join('');
+        }
+        
+        function bookSpot(spotId) {
+            localStorage.setItem('selectedSpotId', spotId);
+            window.location.href = './booking_page.html?spot_id=' + spotId;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadParkingSpots();
+        });
+        
         const locationImages = {
             airport: [
                 './images/Rwanda_Airport_jpeg3.jpeg',
