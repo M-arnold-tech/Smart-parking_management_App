@@ -629,9 +629,7 @@
         <!-- MOBILE MONEY FORM -->
         <form class="payment-form" id="momoForm">
           <div class="info-banner">
-            <p>
-              💡 You will receive a prompt on your phone to confirm the payment
-            </p>
+            <p>💡 Payment will be processed automatically (Demo Mode)</p>
           </div>
           <div class="form-group">
             <label>Phone Number *</label>
@@ -646,9 +644,7 @@
         <!-- AIRTEL MONEY FORM -->
         <form class="payment-form" id="airtelForm">
           <div class="info-banner">
-            <p>
-              💡 You will receive a prompt on your phone to confirm the payment
-            </p>
+            <p>💡 Payment will be processed automatically (Demo Mode)</p>
           </div>
           <div class="form-group">
             <label>Phone Number *</label>
@@ -662,6 +658,9 @@
 
         <!-- CARD FORM -->
         <form class="payment-form" id="cardForm">
+          <div class="info-banner">
+            <p>💡 Payment will be processed automatically (Demo Mode)</p>
+          </div>
           <div class="form-group">
             <label>Card Number *</label>
             <input
@@ -691,8 +690,8 @@
         <form class="payment-form" id="cashForm">
           <div class="info-banner">
             <p>
-              💡 Your parking spot will be reserved for 30 minutes. Please
-              arrive on time to complete payment at the location.
+              💡 Your parking spot will be reserved. Payment will be processed
+              automatically (Demo Mode).
             </p>
           </div>
           <div class="form-group">
@@ -897,18 +896,21 @@
           payment_id = initData.payment_id;
           localStorage.setItem("payment_id", payment_id);
 
-          // Payment confirmation
+          // Payment confirmation - Auto confirm since it's fake/demo
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
           const confirmRes = await fetch(`${API_BASE_URL}/payment/confirm`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              payment_id: payment_id,
+              payment_id: parseInt(payment_id),
               success: true,
             }),
           });
           const confirmData = await confirmRes.json();
 
           if (!confirmData.success) {
+            console.error("Payment confirmation error:", confirmData);
             alert(confirmData.message || "Payment confirmation failed");
             payBtn.disabled = false;
             payBtn.textContent = "Try again";

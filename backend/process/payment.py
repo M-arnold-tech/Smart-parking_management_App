@@ -67,6 +67,14 @@ def confirm_payment(data):
   payment_id = data.get("payment_id")
   is_confirmed = data.get("success", True)
 
+  if not payment_id:
+    return {"success": False, "message": "Payment ID is required!"}
+
+  try:
+    payment_id = int(payment_id)
+  except (ValueError, TypeError):
+    return {"success": False, "message": "Invalid payment ID format."}
+
   conn = get_connection()
   if not conn:
     return {"success": False, "message": "Database connection Failed!"}
@@ -113,13 +121,36 @@ def confirm_payment(data):
       reservation = cursor.fetchone()
       
       if reservation:
-          create_notification({
-              "driver_id": reservation["driver_id"],
-              "reservation_id": payment["res_id"],
-              "type": "payment_confirmed",
-              "title": "Payment Confirmed",
-              "message": f"Your payment of {payment['amount']} RWF has been confirmed. Your reservation is now active."
-          })
+          try:
+              # Safely get amount from payment record
+              amount = payment.get("amount")
+              if amount is None:
+                  amount = 0
+              else:
+                  # Convert Decimal to float/string if needed
+                  try:
+                      amount = float(amount)
+                  except (ValueError, TypeError):
+                      amount = 0
+              
+              amount_str = f"{amount:.2f}" if amount > 0 else "0"
+              create_notification({
+                  "driver_id": reservation["driver_id"],
+                  "reservation_id": payment["res_id"],
+                  "type": "payment_confirmed",
+                  "title": "Payment Confirmed",
+                  "message": f"Your payment of {amount_str} RWF has been confirmed. Your reservation is now active."
+              })
+          except Exception as e:
+              print(f"Error creating notification: {e}")
+              # Create notification without amount if there's an error
+              create_notification({
+                  "driver_id": reservation["driver_id"],
+                  "reservation_id": payment["res_id"],
+                  "type": "payment_confirmed",
+                  "title": "Payment Confirmed",
+                  "message": "Your payment has been confirmed. Your reservation is now active."
+              })
 
       result_message = "Payment confirmed and reservation activated."
     else:

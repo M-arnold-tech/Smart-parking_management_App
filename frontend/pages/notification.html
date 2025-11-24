@@ -254,165 +254,6 @@
         font-size: 14px;
       }
 
-      /* POPUP NOTIFICATION */
-      .popup-notification {
-        position: fixed;
-        top: -100px;
-        right: 20px;
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        max-width: 400px;
-        z-index: 10000;
-        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        border-left: 4px solid #101f5e;
-      }
-
-      .popup-notification.show {
-        top: 20px;
-      }
-
-      .popup-header {
-        display: flex;
-        align-items: start;
-        gap: 15px;
-        margin-bottom: 15px;
-      }
-
-      .popup-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        flex-shrink: 0;
-      }
-
-      .popup-content {
-        flex: 1;
-      }
-
-      .popup-title {
-        font-size: 16px;
-        font-weight: 700;
-        color: #1a1f71;
-        margin-bottom: 6px;
-      }
-
-      .popup-message {
-        font-size: 14px;
-        color: #666;
-        line-height: 1.5;
-      }
-
-      .popup-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-      }
-
-      .popup-btn {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 13px;
-      }
-
-      .popup-btn-primary {
-        background: #0e237f;
-        color: white;
-      }
-
-      .popup-btn-secondary {
-        background: #f0f0f0;
-        color: #666;
-      }
-
-      .popup-btn:hover {
-        transform: translateY(-2px);
-      }
-
-      .popup-close {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: #999;
-        cursor: pointer;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: all 0.3s;
-      }
-
-      .popup-close:hover {
-        background: #f0f0f0;
-        color: #333;
-      }
-
-      /* PERMISSION BANNER */
-      .permission-banner {
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      .permission-banner.hidden {
-        display: none;
-      }
-
-      .permission-icon {
-        font-size: 32px;
-        flex-shrink: 0;
-      }
-
-      .permission-content {
-        flex: 1;
-      }
-
-      .permission-title {
-        font-weight: 700;
-        color: #1a1f71;
-        margin-bottom: 5px;
-      }
-
-      .permission-text {
-        font-size: 14px;
-        color: #666;
-      }
-
-      .permission-btn {
-        padding: 10px 20px;
-        background: #132884;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .permission-btn:hover {
-        background: #293fbb;
-      }
-
       /* RESPONSIVE */
       @media (max-width: 768px) {
         .notifications-container {
@@ -431,16 +272,6 @@
         .tab-btn {
           white-space: nowrap;
         }
-
-        .popup-notification {
-          left: 10px;
-          right: 10px;
-          max-width: none;
-        }
-
-        .popup-notification.show {
-          top: 10px;
-        }
       }
     </style>
   </head>
@@ -454,23 +285,6 @@
         </div>
         <button class="mark-all-btn" onclick="markAllAsRead()">
           Mark All as Read
-        </button>
-      </div>
-
-      <!-- PERMISSION BANNER -->
-      <div class="permission-banner" id="permissionBanner">
-        <div class="permission-icon">🔔</div>
-        <div class="permission-content">
-          <div class="permission-title">Enable Push Notifications</div>
-          <div class="permission-text">
-            Get instant alerts for booking confirmations and reminders
-          </div>
-        </div>
-        <button
-          class="permission-btn"
-          onclick="requestNotificationPermission()"
-        >
-          Enable
         </button>
       </div>
 
@@ -496,30 +310,6 @@
       </div>
     </div>
 
-    <!-- POPUP NOTIFICATION (for real-time alerts) -->
-    <div class="popup-notification" id="popupNotification">
-      <button class="popup-close" onclick="closePopup()">×</button>
-      <div class="popup-header">
-        <div class="popup-icon icon-warning" id="popupIcon">⚠️</div>
-        <div class="popup-content">
-          <div class="popup-title" id="popupTitle">
-            Parking Time Ending Soon
-          </div>
-          <div class="popup-message" id="popupMessage">
-            Your parking at Airport A1 expires in 15 minutes.
-          </div>
-        </div>
-      </div>
-      <div class="popup-actions">
-        <button class="popup-btn popup-btn-secondary" onclick="closePopup()">
-          Dismiss
-        </button>
-        <button class="popup-btn popup-btn-primary" onclick="extendBooking()">
-          Extend Time
-        </button>
-      </div>
-    </div>
-
     <script src="../assets/js/config.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script>
@@ -539,9 +329,6 @@
       function checkNotificationPermission() {
         if ("Notification" in window) {
           notificationPermission = Notification.permission;
-          if (notificationPermission === "granted") {
-            document.getElementById("permissionBanner").classList.add("hidden");
-          }
         }
       }
 
@@ -550,15 +337,7 @@
           Notification.requestPermission().then((permission) => {
             notificationPermission = permission;
             if (permission === "granted") {
-              document
-                .getElementById("permissionBanner")
-                .classList.add("hidden");
-              showPopup(
-                "🔔",
-                "Notifications Enabled",
-                "You will now receive booking alerts and reminders",
-                false
-              );
+              console.log("Notifications enabled");
             }
           });
         } else {
@@ -832,58 +611,6 @@
         }
       }
 
-      function showPopup(icon, title, message, showActions = true) {
-        const popup = document.getElementById("popupNotification");
-        document.getElementById("popupIcon").textContent = icon;
-        document.getElementById("popupTitle").textContent = title;
-        document.getElementById("popupMessage").textContent = message;
-
-        if (!showActions) {
-          popup.querySelector(".popup-actions").style.display = "none";
-        } else {
-          popup.querySelector(".popup-actions").style.display = "flex";
-        }
-
-        popup.classList.add("show");
-
-        // Auto-hide after 8 seconds if no actions
-        if (!showActions) {
-          setTimeout(() => {
-            closePopup();
-          }, 8000);
-        }
-
-        // Show browser notification if permission granted
-        if (notificationPermission === "granted") {
-          new Notification(title, {
-            body: message,
-            icon: "🅿️",
-            badge: "🅿️",
-          });
-        }
-      }
-
-      function closePopup() {
-        const popup = document.getElementById("popupNotification");
-        popup.classList.remove("show");
-
-        // Reset actions display for next notification
-        setTimeout(() => {
-          popup.querySelector(".popup-actions").style.display = "flex";
-        }, 400); // Wait for animation to complete
-      }
-
-      function extendBooking() {
-        const popup = document.getElementById("popupNotification");
-        popup.classList.remove("show");
-
-        // Small delay before redirect
-        setTimeout(() => {
-          alert("Redirecting to extend booking...");
-          // window.location.href = 'extend-booking.html';
-        }, 300);
-      }
-
       function startNotificationMonitoring() {
         // Check bookings every 30 seconds for time-based notifications
         setInterval(() => {
@@ -916,12 +643,7 @@
             minutesUntilStart <= 30 &&
             minutesUntilStart >= 29
           ) {
-            showPopup(
-              "⏰",
-              "Parking Time Approaching",
-              `Your parking at ${booking.location} starts in ${minutesUntilStart} minutes. Get ready to leave!`,
-              false
-            );
+            // Popup removed - notifications are shown in the list only
 
             // Add to notifications list
             addNotification({
@@ -937,12 +659,7 @@
 
           // Late arrival warning (if past arrival time by more than 15 minutes)
           if (minutesUntilStart < -15 && minutesUntilStart > -30) {
-            showPopup(
-              "⚠️",
-              "Late Arrival Warning",
-              `You're late for your ${booking.location} booking. Your spot may be reassigned soon.`,
-              true
-            );
+            // Popup removed - notifications are shown in the list only
           }
 
           // Parse duration and check expiry
@@ -960,12 +677,7 @@
               minutesUntilExpiry <= 15 &&
               minutesUntilExpiry >= 14
             ) {
-              showPopup(
-                "⚠️",
-                "Parking Time Ending Soon",
-                `Your parking at ${booking.location} expires in ${minutesUntilExpiry} minutes. Extend now to avoid penalties.`,
-                true
-              );
+              // Popup removed - notifications are shown in the list only
 
               addNotification({
                 type: "warning",
@@ -980,12 +692,7 @@
 
             // Expired notification
             if (minutesUntilExpiry < 0 && minutesUntilExpiry > -5) {
-              showPopup(
-                "🔴",
-                "Parking Time Expired",
-                `Your parking at ${booking.location} has expired. Please return to your vehicle immediately.`,
-                false
-              );
+              // Popup removed - notifications are shown in the list only
 
               addNotification({
                 type: "expired",
