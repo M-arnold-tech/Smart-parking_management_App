@@ -1,21 +1,43 @@
-<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
-.venv/
+*$py.class
+*.so
+.Python
+env/
 venv/
+ENV/
+.venv
 
-# Environment
+# Environment variables
 .env
+.env.local
+.env.*.local
 
-# Editor
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # OS
+.DS_Store
 Thumbs.db
-desktop.ini
-=======
-__pycache__
-.vscode
-process/__pycache__
->>>>>>> ab08eea56d971a03216f92fff0b18ef47329d23f
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite
+
+# Build files
+dist/
+build/
+*.egg-info/
+
+Deployment.md
+DATABASE_SETUP.md
+example.py
+README.md
