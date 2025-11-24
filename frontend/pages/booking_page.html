@@ -539,15 +539,15 @@
         </div>
         <nav>
             <ul>
-                <li><a href="./pages/find_parking.html" class="active">Home</a></li>
-                <li><a href="./pages/booking_page.html">Booking</a></li>
-                <li><a href="./pages/User_dashboard.html">Dashboard</a></li>
-                <li><a href="./pages/help_page.html">Help</a></li>
-                <li><a href="./pages/notification.html" class="notification_btn">Notifications<i class="fas fa-bell"></i></a></li>
+                <li><a href="./find_parking.html" class="active">Home</a></li>
+                <li><a href="./booking_page.html">Booking</a></li>
+                <li><a href="./User_dashboard.html">Dashboard</a></li>
+                <li><a href="./help_page.html">Help</a></li>
+                <li><a href="./notification.html" class="notification_btn">Notifications<i class="fas fa-bell"></i></a></li>
             </ul>
         </nav>
        </div>
-        <a href="./pages/profile_page.html">
+        <a href="./profile_page.html">
     <div class="user-icon"></div>
 </a>
     </header>
@@ -933,7 +933,7 @@
         localStorage.setItem("currentBooking", JSON.stringify(bookingInfo));
 
         alert("Reservation created! Redirecting to payment page...");
-        window.location.href = "./pages/payment_page.html";
+        window.location.href = "./payment_page.html";
 
     } catch (error) {
         console.error("Reservation error:", error.response || error);
