@@ -36,8 +36,3 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
-
-Deployment.md
-DATABASE_SETUP.md
-example.py
-README.md
