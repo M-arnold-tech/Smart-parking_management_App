@@ -2,7 +2,7 @@
 
 A full-stack web application for managing parking spaces, reservations, and payments. The system supports two types of users: **Drivers** (who book parking spots) and **Parking Operators** (who manage parking spots).
 
-## 📋 Project Overview
+## Project Overview
 
 This is a Flask-based REST API backend with a frontend built using HTML, CSS, and JavaScript. The system allows:
 
@@ -20,7 +20,7 @@ This is a Flask-based REST API backend with a frontend built using HTML, CSS, an
   - View reservations
   - Monitor their parking operations
 
-## 🏗️ Architecture
+## Architecture
 
 ### Project Structure
 
@@ -44,7 +44,7 @@ Smart-parking_management_App-main/
 │   ├── render.yaml           # Render deployment config
 │   └── smart_space.sql       # Database schema
 │
-├── frontend/                 # Frontend (GitHub Pages)
+├── frontend/                 # Frontend (Netlify)
 │   ├── assets/
 │   │   ├── css/              # Stylesheets
 │   │   ├── js/               # JavaScript files
@@ -58,20 +58,18 @@ Smart-parking_management_App-main/
 │   │   ├── payment_page.html
 │   │   ├── User_dashboard.html
 │   │   └── ...
-│   └── index.html            # GitHub Pages entry point
+│   └── index.html            # entry point
 │
-├── DEPLOYMENT.md             # Deployment guide
-├── DATABASE_SETUP.md         # Local database setup
 └── README.md                 # This file
 ```
 
 ### Deployment Architecture
 
 - **Database**: Aiven (MySQL) - Cloud-hosted MySQL database
-- **Backend**: Render - Flask API deployed as web service
-- **Frontend**: GitHub Pages - Static site hosting
+- **Backend**: Render - Flask API deployed as a web service
+- **Frontend**: Netlify - Static site hosting
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### Prerequisites
 
@@ -89,8 +87,6 @@ pip install -r requirements.txt
 ```
 
 #### 2. Set Up MySQL Database
-
-See [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed instructions.
 
 Quick setup:
 
@@ -135,31 +131,28 @@ python -m http.server 8000
 # Then visit http://localhost:8000
 ```
 
-## 🌐 Deployment
-
-For production deployment to Aiven, Render, and GitHub Pages, see **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete step-by-step instructions.
+## Deployment
 
 ### Quick Deployment Summary
 
 1. **Database (Aiven)**:
 
-   - Create MySQL service on Aiven
+   - Create a MySQL service on Aiven
    - Import `backend/smart_space.sql`
    - Get connection credentials
 
 2. **Backend (Render)**:
 
    - Connect GitHub repository
-   - Create web service
+   - Create a web service
    - Set environment variables (Aiven credentials)
    - Deploy
 
-3. **Frontend (GitHub Pages)**:
+3. **Frontend (Netlify)**:
    - Update `frontend/assets/js/config.js` with Render backend URL
-   - Enable GitHub Pages in repository settings
    - Deploy
 
-## 📁 Key Files
+## Key Files
 
 ### Backend
 
@@ -173,15 +166,15 @@ For production deployment to Aiven, Render, and GitHub Pages, see **[DEPLOYMENT.
 
 - `frontend/assets/js/config.js` - **IMPORTANT**: API URL configuration
 - `frontend/pages/*.html` - Application pages
-- `frontend/index.html` - GitHub Pages entry point
+- `frontend/index.html` - entry point
 
-## 🔧 Configuration
+## Configuration
 
 ### Backend API URL
 
 Update `frontend/assets/js/config.js`:
 
-```javascript
+```JavaScript
 const API_BASE_URL = isLocalhost
   ? "http://127.0.0.1:5000" // Local
   : "https://your-backend.onrender.com"; // Production
@@ -197,7 +190,7 @@ Configure in `backend/config.py` or via environment variables:
 - `DB_NAME` - Database name
 - `DB_PORT` - Database port (default: 3306)
 
-## 📝 API Endpoints
+## API Endpoints
 
 ### Authentication
 
@@ -214,7 +207,7 @@ Configure in `backend/config.py` or via environment variables:
 
 ### Reservations
 
-- `POST /reservation/book` - Create reservation
+- `POST /reservation/book` - Create a reservation
 - `GET /reservation/driver/<id>` - Get driver reservations
 - `PUT /reservation/<id>/cancel` - Cancel reservation
 
@@ -223,13 +216,12 @@ Configure in `backend/config.py` or via environment variables:
 - `POST /payment/initiate` - Initiate payment
 - `PUT /payment/confirm` - Confirm payment
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Local Development
 
 **Database Connection Issues**:
 
-- Ensure MySQL is running
 - Verify credentials in `.env` file
 - Check database exists: `mysql -u root -p -e "SHOW DATABASES;"`
 
@@ -242,16 +234,7 @@ Configure in `backend/config.py` or via environment variables:
 - Install dependencies: `pip install -r backend/requirements.txt`
 - Check Python environment
 
-### Deployment
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) troubleshooting section for deployment-specific issues.
-
-## 📚 Documentation
-
-- [DEPLOYMENT.md](DEPLOYMENT.md) - Complete deployment guide
-- [DATABASE_SETUP.md](DATABASE_SETUP.md) - Local database setup
-
-## 🎯 Next Steps
+## Next Steps
 
 1. Set up local development environment
 2. Test all features locally
@@ -259,14 +242,12 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) troubleshooting section for deployment-specif
 4. Configure custom domain (optional)
 5. Set up monitoring and backups
 
-## 📄 License
+## License
 
 This project is open source and available for educational purposes.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
-
-**Note**: Remember to update `frontend/assets/js/config.js` with your production backend URL after deploying to Render!
