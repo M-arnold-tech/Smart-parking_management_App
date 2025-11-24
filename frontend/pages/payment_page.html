@@ -909,7 +909,7 @@
           const confirmData = await confirmRes.json();
 
           if (!confirmData.success) {
-            alert(confirmData.message || "Paymnt confirmation failed");
+            alert(confirmData.message || "Payment confirmation failed");
             payBtn.disabled = false;
             payBtn.textContent = "Try again";
             return;

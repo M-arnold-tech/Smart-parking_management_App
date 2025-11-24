@@ -12,7 +12,7 @@ const isLocalhost = window.location.hostname === 'localhost' ||
 // IMPORTANT: Replace 'your-backend-url' with your actual Render backend URL after deployment
 // Example: 'https://smart-parking-api.onrender.com'
 const API_BASE_URL = isLocalhost 
-    ? 'http://127.0.0.1:5000'  // Local development
+    ? 'https://smart-parking-management-app-ggbf.onrender.com'  // Local development
     : 'https://smart-parking-management-app-ggbf.onrender.com';  // Production - UPDATE THIS!
 
 // Export for use in other scripts

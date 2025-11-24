@@ -563,9 +563,9 @@
             <div class="location-card">
                 <div class="location-icon">🅿️</div>
                 <div class="location-details">
-                    <h3>Airport Parking</h3>
-                    <p> Kigali International Airport, KN 8 Rd</p>
-                    <span class="availability">✓ 24 Spots Available</span>
+                    <h3>Loading...</h3>
+                    <p>Please wait...</p>
+                    <span class="availability">Loading availability...</span>
                 </div>
             </div>
 
@@ -683,7 +683,7 @@
             <div class="summary-card">
                 <div class="summary-row">
                     <span class="summary-label"> Location</span>
-                    <span class="summary-value">Airport Parking</span>
+                    <span class="summary-value" id="summaryLocation">Loading...</span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label"> Date</span>
@@ -812,6 +812,7 @@
                         selectedSpotId = spot.spot_id;
                         selectedSpot = spot;
                         updateLocationCard(spot);
+                        updateSummary();
                     } else {
                         alert('No available parking spots found. Please try again later.');
                     }
@@ -835,10 +836,24 @@
                     const availability = locationDetails.querySelector('.availability');
                     
                     if (h3) h3.textContent = spot.location || 'Parking Location';
-                    if (p) p.textContent = spot.location || 'Select a location';
-                    if (availability) {
-                        availability.textContent = `✓ ${spot.spot_number || 0} Spots Available`;
+                    if (p) {
+                        p.textContent = spot.location || 'Select a location';
                     }
+                    if (availability) {
+                        const spotsText = spot.spot_number === 1 ? 'Spot' : 'Spots';
+                        availability.textContent = `✓ ${spot.spot_number || 0} ${spotsText} Available`;
+                    }
+                }
+            } else if (locationCard && !spot) {
+                const locationDetails = locationCard.querySelector('.location-details');
+                if (locationDetails) {
+                    const h3 = locationDetails.querySelector('h3');
+                    const p = locationDetails.querySelector('p');
+                    const availability = locationDetails.querySelector('.availability');
+                    
+                    if (h3) h3.textContent = 'Loading...';
+                    if (p) p.textContent = 'Please wait...';
+                    if (availability) availability.textContent = 'Loading availability...';
                 }
             }
         }
@@ -867,6 +882,14 @@
         }
 
         function updateSummary() {
+            // Update location
+            const summaryLocation = document.getElementById('summaryLocation');
+            if (summaryLocation && selectedSpot) {
+                summaryLocation.textContent = selectedSpot.location || 'Not selected';
+            } else if (summaryLocation) {
+                summaryLocation.textContent = 'Not selected';
+            }
+            
             // Update date
             const date = document.getElementById('parkingDate').value;
             if (date) {

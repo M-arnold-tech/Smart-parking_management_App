@@ -75,7 +75,7 @@ def confirm_payment(data):
   try:
     # Find payment data
     cursor.execute("""
-        SELECT payment_id, res_id, status
+        SELECT payment_id, res_id, amount, status
         FROM payment
         WHERE payment_id=%s
     """, (payment_id,))
