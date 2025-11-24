@@ -678,9 +678,12 @@
     </div>
 
     <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/auth.js"></script>
     <script>
-        // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth("driver")) {
+                return;
+            }
             loadUserData();
             loadBookings();
             updateDate();
@@ -882,8 +885,9 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                alert('Logging out...');
-                localStorage.removeItem('userSession');
+                localStorage.removeItem('driver_id');
+                localStorage.removeItem('userProfile');
+                sessionStorage.removeItem('userData');
                 window.location.href = './sign_up.html';
             }
         }

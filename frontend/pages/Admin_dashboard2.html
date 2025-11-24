@@ -826,7 +826,14 @@
         </div>
     </div>
 
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/auth.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth("operator")) {
+                return;
+            }
+        });
         function showSection(section) {
             alert(`Navigating to ${section} section...`);
             // In real app: Load different content
@@ -866,8 +873,10 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                alert('Logging out...');
-                // window.location.href = 'login.html';
+                localStorage.removeItem('driver_id');
+                localStorage.removeItem('userProfile');
+                sessionStorage.removeItem('userData');
+                window.location.href = './sign_up.html';
             }
         }
 

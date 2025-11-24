@@ -733,17 +733,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/auth.js"></script>
     <script>
 
-        // Global variables
         let selectedDurationHours = 0;
         let selectedSpotId = null;
         let selectedSpot = null;
         let availableSpots = [];
-        const HOURLY_RATE = 150; // RWF per hour
+        const HOURLY_RATE = 150;
 
-        // Set minimum date to today
         document.addEventListener('DOMContentLoaded', async function() {
+            if (!checkAuth("driver")) {
+                return;
+            }
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('parkingDate').min = today;
             

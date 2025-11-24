@@ -543,7 +543,7 @@
                 <div class="payment-method">
                     <input type="radio" id="airtel" name="payment" value="airtel" onchange="selectPaymentMethod('airtel')">
                     <label for="airtel" class="method-card">
-                        <div class="method-icon airtel"><img src="/images/" alt="Airtel Money"></div>
+                        <div class="method-icon airtel"><img src="../assets/images/airtel.svg" alt="Airtel Money"></div>
                         <div class="method-details">
                             <h3>Airtel Money</h3>
                             <p>Pay with Airtel Money</p>
@@ -730,6 +730,7 @@
     </div>
 
     <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/auth.js"></script>
     <script>
         let selectedMethod = null;
 
@@ -926,6 +927,9 @@
 
         // Initialize - check if booking data exists
         document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth("driver")) {
+                return;
+            }
             // You would normally get this from URL params or localStorage
             const bookingData = {
                 location: 'Airport Parking',

@@ -484,7 +484,7 @@
                 <div class="location-card" data-location="airport">
                     <div class="location-image">
                         <button class="image-arrow prev" onclick="changeImage(event, 'airport', -1)">‹</button>
-                        <img src="../images/Airport parking1.avif" alt="Airport Parking 1">
+                        <img src="../assets/images/Airport parking1.avif" alt="Airport Parking 1">
                         <button class="image-arrow next" onclick="changeImage(event, 'airport', 1)">›</button>
                         <div class="image-nav">
                             <span class="image-dot active" onclick="selectImage(event, 'airport', 0)"></span>
@@ -509,7 +509,7 @@
                 <div class="location-card" data-location="downtown">
                     <div class="location-image">
                         <button class="image-arrow prev" onclick="changeImage(event, 'downtown', -1)"><</button>
-                        <img src="../images/street_parking3.jpg" alt="Downtown Parking 1">
+                        <img src="../assets/images/street_parking3.jpg" alt="Downtown Parking 1">
                         <button class="image-arrow next" onclick="changeImage(event, 'downtown', 1)">></button>
                         <div class="image-nav">
                             <span class="image-dot active" onclick="selectImage(event, 'downtown', 0)"></span>
@@ -534,7 +534,7 @@
                 <div class="location-card" data-location="kimironko">
                     <div class="location-image">
                         <button class="image-arrow prev" onclick="changeImage(event, 'kimironko', -1)"><</button>
-                        <img src="../images/kimironko-market.jpg" alt="Kimironko Parking 1">
+                        <img src="../assets/images/kimironko-market.jpg" alt="Kimironko Parking 1">
                         <button class="image-arrow next" onclick="changeImage(event, 'kimironko', 1)">></button>
                         <div class="image-nav">
                             <span class="image-dot active" onclick="selectImage(event, 'kimironko', 0)"></span>
@@ -559,8 +559,8 @@
                 <div class="location-card" data-location="chic">
                     <div class="location-image">
                         <button class="image-arrow prev" onclick="changeImage(event, 'chic', -1)"><</button>
-                        <img src="../images/chic image1.jpg" alt="Chic Parking 1">
-                        <button class="image-arrow next" onclick="changeImage(event, 'chic', 1)">></button>></button>
+                        <img src="../assets/images/chic image1.jpg" alt="Chic Parking 1">
+                        <button class="image-arrow next" onclick="changeImage(event, 'chic', 1)">></button>
                         <div class="image-nav">
                             <span class="image-dot active" onclick="selectImage(event, 'chic', 0)"></span>
                             <span class="image-dot" onclick="selectImage(event, 'chic', 1)"></span>
@@ -609,7 +609,7 @@
             grid.innerHTML = spots.map(spot => `
                 <div class="location-card" data-location="${spot.location.toLowerCase().replace(/\s+/g, '-')}">
                     <div class="location-image">
-                        <img src="../images/Airport parking1.avif" alt="${spot.location}">
+                        <img src="../assets/images/Airport parking1.avif" alt="${spot.location}">
                     </div>
                     <div class="location-dots">...</div>
                     <div class="location-info">
@@ -638,24 +638,24 @@
         
         const locationImages = {
             airport: [
-                './images/Rwanda_Airport_jpeg3.jpeg',
-                './images/Airport parking2.jpg',
-                './images/Airport parking1.avif'
+                '../assets/images/Rwanda_Airport_.jpeg3.jpeg',
+                '../assets/images/Airport parking2.jpg',
+                '../assets/images/Airport parking1.avif'
             ],
             downtown: [
-                './images/street_parking4.jpg',
-                './images/street_parking2.jpg',
-                './images/street_parking3.jpg'
+                '../assets/images/street_parking4.jpg',
+                '../assets/images/street_parking3.jpg',
+                '../assets/images/street_parking3.jpg'
             ],
             kimironko: [
-                './images/kimironko-market.jpg',
-                '',
-                './images/kimironko image3.jpg'
+                '../assets/images/kimironko-market.jpg',
+                '../assets/images/kimironko-market.jpg',
+                '../assets/images/kimironko-market.jpg'
             ],
             chic: [
-                './images/chic image1.jpg',
-                './images/chic image2.jpg',
-                './images/chic image3.jpg'
+                '../assets/images/chic image1.jpg',
+                '../assets/images/chic image2.png',
+                '../assets/images/chic image3.jpg'
             ]
         };
 

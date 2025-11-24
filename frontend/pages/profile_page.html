@@ -762,9 +762,12 @@
     </div>
 
     <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/auth.js"></script>
     <script>
-        // Load user data on page load
         document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth("driver")) {
+                return;
+            }
             loadUserProfile();
             loadUserStats();
         });
