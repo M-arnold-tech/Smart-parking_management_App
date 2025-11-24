@@ -3,6 +3,7 @@
 from database import get_connection
 from datetime import datetime
 from process.parkingSpots import update_parking_spot_availability
+from process.notifications import create_notification
 
 # === PAYMENT INITIATION ===
 def initiate_payment(data):
@@ -107,6 +108,18 @@ def confirm_payment(data):
           WHERE r.res_id=%s
       """, (payment["res_id"],))
       conn.commit()
+      
+      cursor.execute("SELECT driver_id FROM reservation WHERE res_id = %s", (payment["res_id"],))
+      reservation = cursor.fetchone()
+      
+      if reservation:
+          create_notification({
+              "driver_id": reservation["driver_id"],
+              "reservation_id": payment["res_id"],
+              "type": "payment_confirmed",
+              "title": "Payment Confirmed",
+              "message": f"Your payment of {payment['amount']} RWF has been confirmed. Your reservation is now active."
+          })
 
       result_message = "Payment confirmed and reservation activated."
     else:

@@ -658,19 +658,8 @@
                 <h3 class="section-title" style="margin: 30px 0 20px;">Recent Locations</h3>
                 
                 <div id="recentLocations">
-                    <div class="location-item">
-                        <div class="location-icon">🅿️</div>
-                        <div class="location-info">
-                            <h4>Airport Parking</h4>
-                            <p>Kigali International Airport</p>
-                        </div>
-                    </div>
-                    <div class="location-item">
-                        <div class="location-icon">🅿️</div>
-                        <div class="location-info">
-                            <h4>City Center Mall</h4>
-                            <p>Downtown Kigali</p>
-                        </div>
+                    <div class="empty-state" style="text-align: center; padding: 20px; color: #999;">
+                        <p>No recent locations</p>
                     </div>
                 </div>
             </div>
@@ -687,6 +676,8 @@
             loadUserData();
             loadBookings();
             updateDate();
+            updateNotificationBadge();
+            setInterval(updateNotificationBadge, 60000);
         });
 
         async function loadUserData() {
@@ -797,9 +788,32 @@
                 document.getElementById("totalSpent").textContent = totalSpent.toLocaleString();
 
                 displayBookings(bookings);
+                loadRecentLocations(bookings);
             } catch (error) {
                 console.error("Error loading bookings:", error);
             }
+        }
+        
+        function loadRecentLocations(bookings) {
+            const container = document.getElementById('recentLocations');
+            if (!container) return;
+            
+            const uniqueLocations = [...new Set(bookings.map(b => b.location).filter(Boolean))].slice(0, 2);
+            
+            if (uniqueLocations.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="text-align: center; padding: 20px; color: #999;"><p>No recent locations</p></div>';
+                return;
+            }
+            
+            container.innerHTML = uniqueLocations.map(location => `
+                <div class="location-item">
+                    <div class="location-icon">🅿️</div>
+                    <div class="location-info">
+                        <h4>${location}</h4>
+                        <p>Recent parking location</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function isActiveBooking(booking) {

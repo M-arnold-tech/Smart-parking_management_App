@@ -747,11 +747,25 @@
                 return;
             }
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('parkingDate').min = today;
+            const parkingDateInput = document.getElementById('parkingDate');
+            const arrivalTimeInput = document.getElementById('arrivalTime');
+            
+            parkingDateInput.min = today;
+            updateNotificationBadge();
+            
+            const savedDate = localStorage.getItem('searchDate');
+            const savedTime = localStorage.getItem('searchTime');
+            
+            if (savedDate && savedDate >= today) {
+                parkingDateInput.value = savedDate;
+            }
+            if (savedTime) {
+                arrivalTimeInput.value = savedTime;
+            }
             
             // Add change listeners
-            document.getElementById('parkingDate').addEventListener('change', updateSummary);
-            document.getElementById('arrivalTime').addEventListener('change', updateSummary);
+            parkingDateInput.addEventListener('change', updateSummary);
+            arrivalTimeInput.addEventListener('change', updateSummary);
             document.getElementById('vehiclePlate').addEventListener('input', updateSummary);
             document.getElementById('fullName').addEventListener('input', validateForm);
             document.getElementById('phoneNumber').addEventListener('input', validateForm);
@@ -927,20 +941,7 @@
                 return;
             }
 
-            // Demo promo codes
-            const promoCodes = {
-                'SAVE10': 0.10,
-                'FIRST20': 0.20,
-                'AIRPORT15': 0.15
-            };
-
-            if (promoCodes[promoCode]) {
-                const discount = promoCodes[promoCode];
-                alert(`✓ Promo code "${promoCode}" applied! You saved ${discount * 100}%`);
-                // In real app, update pricing here
-            } else {
-                alert('Invalid promo code. Try: SAVE10, FIRST20, or AIRPORT15');
-            }
+            alert('Promo code feature coming soon!');
         }
 
         async function proceedToPayment() {

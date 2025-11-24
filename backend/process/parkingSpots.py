@@ -117,3 +117,72 @@ def update_parking_spot_availability(spot_id, available_spots):
   cursor.close()
   conn.close()
   return {"success": True, "message": "Parking availability update successfully!"}
+
+def get_operator_parking_spots(operator_id):
+  if not operator_id:
+    return {"success": False, "message": "Operator ID is required!"}
+  
+  conn = get_connection()
+  if not conn:
+    return {"success": False, "message": "Database connection failed!"}
+  cursor = conn.cursor(dictionary=True)
+  
+  try:
+    cursor.execute("""
+      SELECT spot_id, location, price_per_hour, spot_number, is_available, created_at
+      FROM parking_spot
+      WHERE operator_id = %s
+      ORDER BY created_at DESC
+    """, (operator_id,))
+    spots = cursor.fetchall()
+    
+    return {"success": True, "parking_spots": spots}
+  except Exception as e:
+    return {"success": False, "message": f"Error: {str(e)}"}
+  finally:
+    cursor.close()
+    conn.close()
+
+def get_operator_statistics(operator_id):
+  if not operator_id:
+    return {"success": False, "message": "Operator ID is required!"}
+  
+  conn = get_connection()
+  if not conn:
+    return {"success": False, "message": "Database connection failed!"}
+  cursor = conn.cursor(dictionary=True)
+  
+  try:
+    cursor.execute("""
+      SELECT COUNT(*) as total_spaces, SUM(spot_number) as total_spots
+      FROM parking_spot
+      WHERE operator_id = %s
+    """, (operator_id,))
+    spaces = cursor.fetchone()
+    
+    from datetime import datetime, date
+    today = date.today()
+    
+    cursor.execute("""
+      SELECT COUNT(*) as today_bookings, COALESCE(SUM(r.total_price), 0) as today_revenue
+      FROM reservation r
+      JOIN parking_spot p ON r.spot_id = p.spot_id
+      WHERE p.operator_id = %s
+      AND DATE(r.created_at) = %s
+    """, (operator_id, today))
+    bookings = cursor.fetchone()
+    
+    return {
+      "success": True,
+      "stats": {
+        "total_spaces": spaces["total_spaces"] or 0,
+        "total_spots": spaces["total_spots"] or 0,
+        "today_bookings": bookings["today_bookings"] or 0,
+        "today_revenue": float(bookings["today_revenue"] or 0)
+      }
+    }
+  except Exception as e:
+    return {"success": False, "message": f"Error: {str(e)}"}
+  finally:
+    cursor.close()
+    conn.close()

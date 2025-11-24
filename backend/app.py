@@ -6,17 +6,17 @@ from api.authentication_api import auth_bp
 from api.parking_api import parking_bp
 from api.reservation_api import reservation_bp
 from api.payment_api import payment_bp
+from api.notification_api import notification_bp
 
 app = Flask(__name__)
 
-# CORS configuration - allow all origins for now (configure for production)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Register blueprints
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(parking_bp, url_prefix="/parking")
 app.register_blueprint(reservation_bp, url_prefix="/reservation")
 app.register_blueprint(payment_bp, url_prefix="/payment")
+app.register_blueprint(notification_bp, url_prefix="/notification")
 
 @app.route("/", methods=["GET"])
 def home():

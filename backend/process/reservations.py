@@ -2,6 +2,7 @@
 
 from database import get_connection
 from process.parkingSpots import update_parking_spot_availability
+from process.notifications import create_notification
 from datetime import datetime
 
 # ===CREATE A RESERVATION===
@@ -46,8 +47,16 @@ def reserve_spot(data):
     """, (driver_id, spot_id, start_time, end_time, total_price))
   conn.commit()
   
-  # Get new reservation ID
   res_id = cursor.lastrowid
+  
+  create_notification({
+      "driver_id": driver_id,
+      "reservation_id": res_id,
+      "type": "booking_approved",
+      "title": "Reservation Created",
+      "message": f"Your parking reservation has been created. Please complete payment to confirm."
+  })
+  
   cursor.close()
   conn.close()
 
@@ -126,7 +135,6 @@ def cancel_reservation(data):
   cursor = conn.cursor(dictionary=True)
 
   try:
-    # Find reservation
     cursor.execute("""
         SELECT * FROM reservation
         WHERE res_id=%s
@@ -157,10 +165,22 @@ def cancel_reservation(data):
         """, (new_available_spots, res["spot_id"]))
         conn.commit()
     
-    # update reservation status
-
+    driver_id = res.get("driver_id")
+    
     cursor.execute("UPDATE reservation SET status='cancelled' WHERE res_id=%s", (res_id,))
     conn.commit()
+    
+    cursor.close()
+    conn.close()
+    
+    if driver_id:
+        create_notification({
+            "driver_id": driver_id,
+            "reservation_id": res_id,
+            "type": "booking_cancelled",
+            "title": "Reservation Cancelled",
+            "message": "Your parking reservation has been cancelled successfully."
+        })
 
     return{"success": True, "message": "Reservation cancelled successfully!"}
   
@@ -262,6 +282,22 @@ def reservation_checkout(data):
         WHERE spot_id=%s
     """, (new_available_spots, res["spot_id"]))
     conn.commit()
+    
+    cursor.execute("SELECT driver_id FROM reservation WHERE res_id=%s", (res_id,))
+    reservation = cursor.fetchone()
+    driver_id = reservation.get("driver_id") if reservation else None
+
+    cursor.close()
+    conn.close()
+    
+    if driver_id:
+        create_notification({
+            "driver_id": driver_id,
+            "reservation_id": res_id,
+            "type": "checkout",
+            "title": "Checkout Complete",
+            "message": f"Your parking session has ended. Final amount: {total_price:.2f} RWF."
+        })
 
     return {
         "success": True,
