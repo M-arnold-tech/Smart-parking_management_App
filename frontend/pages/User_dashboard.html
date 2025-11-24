@@ -518,15 +518,15 @@
         </div>
         <nav>
             <ul>
-                <li><a href="/pages/find_parking.html" class="active">Home</a></li>
-                <li><a href="/pages/booking_page.html">Booking</a></li>
-                <li><a href="/pages/User_dashboard.html">Dashboard</a></li>
-                <li><a href="/pages/help_page.html">Help</a></li>
-                <li><a href="/pages/notification.html" class="notification_btn">Notification<i class="fas fa-bell"></i></a></li>
+                <li><a href="./pages/find_parking.html" class="active">Home</a></li>
+                <li><a href="./pages/booking_page.html">Booking</a></li>
+                <li><a href="./pages/User_dashboard.html">Dashboard</a></li>
+                <li><a href="./pages/help_page.html">Help</a></li>
+                <li><a href="./pages/notification.html" class="notification_btn">Notification<i class="fas fa-bell"></i></a></li>
             </ul>
         </nav>
     </div>
-        <a href="/pages/profile_page.html">
+        <a href="./pages/profile_page.html">
     <div class="user-icon"></div>
 </a>
 
@@ -540,7 +540,7 @@
                     <h1>Welcome back, <span id="userName">John</span>!</h1>
                     <p id="currentDate">Today is Monday, November 21, 2025</p>
                 </div>
-                <a href="/pages/booking_page.html" class="quick-book-btn" onclick="goToBooking()">+ Book Parking Now</a>
+                <a href="./pages/booking_page.html" class="quick-book-btn" onclick="goToBooking()">+ Book Parking Now</a>
             </div>
         </div>
 
@@ -647,7 +647,7 @@
         </div>
     </div>
 
-    <script src="../assets/js/config.js"></script>
+    <script src="./assets/js/config.js"></script>
     <script>
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
@@ -767,26 +767,26 @@
         }
 
         function goToBooking() {
-            window.location.href = '/pages/booking_page.html';
+            window.location.href = './pages/booking_page.html';
         }
 
         function goToBookings() {
-            window.location.href = '/pages/my_bookings.html';
+            window.location.href = './pages/my_bookings.html';
         }
 
         function goToProfile() {
-            window.location.href = '/pages/profile_page.html';
+            window.location.href = './pages/profile_page.html';
         }
 
         function goToHelp() {
-            window.location.href = '/pages/help_page.html';
+            window.location.href = './pages/help_page.html';
         }
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 alert('Logging out...');
                 localStorage.removeItem('userSession');
-                window.location.href = '/pages/sign_up.html';
+                window.location.href = './pages/sign_up.html';
             }
         }
     </script>

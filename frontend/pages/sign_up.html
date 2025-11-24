@@ -165,7 +165,7 @@ body { font-family:'Inter', sans-serif; background:#1a1f71; min-height:100vh; di
   </div>
 </div>
 
-<script src="../assets/js/config.js"></script>
+<script src="./assets/js/config.js"></script>
 <script>
 // Switch tabs
 function switchTab(tab) {
@@ -220,9 +220,9 @@ async function handleLogin(e) {
 
         // redirect based on role
         if(role === 'admin') {
-            window.location.href = '/pages/Admin_dashboard2.html';
+            window.location.href = './pages/Admin_dashboard2.html';
         } else {
-            window.location.href = '/pages/User_dashboard.html';
+            window.location.href = './pages/User_dashboard.html';
         }
     
     } else {
@@ -294,9 +294,9 @@ async function handleSignup(e) {
     
       if (role === "driver") {
         localStorage.setItem("driver_id", data.driver.driver_id);
-        window.location.href = "/pages/User_dashboard.html";
+        window.location.href = "./pages/User_dashboard.html";
       } else {
-        window.location.href = "/pages/Admin_dashboard2.html";
+        window.location.href = "./pages/Admin_dashboard2.html";
       }
     } else{
       alert(data.message || "Signup failed");
