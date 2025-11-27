@@ -22,7 +22,7 @@
       /* SIDEBAR */
       .sidebar {
         width: 260px;
-        background: linear-gradient(180deg, #1a1f71 0%, #667eea 100%);
+        background: linear-gradient(180deg, #1a1f71 0%, #1a1f71 100%);
         color: white;
         padding: 30px 0;
         position: fixed;
@@ -32,7 +32,7 @@
 
       .sidebar-header {
         padding: 0 25px 30px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid #1a1f71;
       }
 
       .logo {
@@ -107,7 +107,7 @@
       }
 
       .page-title p {
-        color: #666;
+        color: #1a1f71;
         font-size: 14px;
       }
 
@@ -267,7 +267,7 @@
 
       .add-btn {
         padding: 8px 16px;
-        background: #667eea;
+        background: #1a1f71;
         color: white;
         border: none;
         border-radius: 8px;
@@ -278,7 +278,7 @@
       }
 
       .add-btn:hover {
-        background: #5568d3;
+        background: #25379a;
       }
 
       /* PARKING SPACES TABLE */
@@ -366,7 +366,7 @@
 
       .edit-btn {
         background: #e3f2fd;
-        color: #2196f3;
+        color: #1a1f71;
       }
 
       .delete-btn {
@@ -411,7 +411,7 @@
 
       .booking-amount {
         font-weight: 700;
-        color: #667eea;
+        color: #182a7f;
         font-size: 16px;
       }
 
@@ -481,7 +481,7 @@
       .form-group input:focus,
       .form-group select:focus,
       .form-group textarea:focus {
-        border-color: #667eea;
+        border-color: #1a1f71;
       }
 
       .form-row {
@@ -508,7 +508,7 @@
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a1f71 0%, #182a7f 100%);
         color: white;
       }
 
@@ -565,11 +565,11 @@
         </a>
         <a href="#" class="menu-item" onclick="showSection('spaces')">
           <span class="menu-icon">🅿️</span>
-          <span class="menu-text">Parking Spaces</span>
+          <span class="menu-text" onclick="window.location.href='find_parking.html'">Parking Spaces</span>
         </a>
         <a href="#" class="menu-item" onclick="showSection('bookings')">
           <span class="menu-icon">📅</span>
-          <span class="menu-text">Bookings</span>
+          <span onclick=window.location.href='booking_page.html' class="menu-text">Bookings</span>
         </a>
         <a href="#" class="menu-item" onclick="showSection('revenue')">
           <span class="menu-icon">💰</span>
@@ -1026,7 +1026,7 @@
       }
       function showSection(section) {
         alert(`Navigating to ${section} section...`);
-        // In real app: Load different content
+        //  Load different content
       }
 
       function openAddSpaceModal() {
@@ -1095,13 +1095,13 @@
 
       function editSpace(index) {
         alert(`Editing parking space ${index + 1}...`);
-        // In real app: Open modal with pre-filled data
+        //  Open modal with pre-filled data
       }
 
       function deleteSpace(index) {
         if (confirm("Are you sure you want to delete this parking space?")) {
           alert("✓ Parking space deleted successfully!");
-          // In real app: Delete from database and refresh table
+          // Delete from database and refresh table
         }
       }
 

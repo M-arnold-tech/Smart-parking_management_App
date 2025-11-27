@@ -10,8 +10,6 @@ ENV/
 .venv
 
 # Environment variables
-.env
-.env.local
 .env.*.local
 
 # IDE
@@ -36,3 +34,5 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+config.bat
+node_modules
